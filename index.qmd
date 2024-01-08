@@ -8,7 +8,21 @@ The 10 steps are all first presented in figure 1 of the paper:
 
 ![The 10 steps](https://besjournals.onlinelibrary.wiley.com/cms/asset/17c3d76c-f2e6-4e2a-a117-581a303cdaef/mee312577-fig-0001-m.png){fig-align="center"}
 
-The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages.
+The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages. In order to access the data and code, which we will reproduce here.
+
+Ideally we would use a package like `rdryad` to do so, but I have been getting nowhere with any of its functions. It is probably broken as it is soon to be superseded by the `deposits` package. If I forget to update this website with the latest `deposits` API, feel free the file an issue on the github repo that contains the source for this webpage.
+
+In the meantime, let's download the files one by one.
+
+```{r, }
+base_dryad_url <- "https://datadryad.org/stash/downloads/file_stream/"
+file_list <- paste0(base_dryad_url, c(37547:37550))
+files_names <- c("monkeys.txt", "owls.txt", "oystercatchers.txt", "code.txt")
+files_names_list <- paste0("data/", files_names)
+mapply(\(file_name, file_path) {
+  if (!file.exists(file_path)) download.file(file_name, destfile =  file_path)
+}, file_list, files_names_list)
+```
 
 ### Step 1: State appropriate questions
 

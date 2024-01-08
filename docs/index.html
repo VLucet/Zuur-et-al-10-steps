@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -146,7 +180,31 @@ ul.task-list li input[type="checkbox"] {
 <figcaption class="figure-caption">The 10 steps</figcaption>
 </figure>
 </div>
-<p>The focus of the 10 steps on on linear modelling of the type <strong>GLM, GLMM</strong> etc and uses R although it generalizes to other languages.</p>
+<p>The focus of the 10 steps on on linear modelling of the type <strong>GLM, GLMM</strong> etc and uses R although it generalizes to other languages. In order to access the data and code, which we will reproduce here.</p>
+<p>Ideally we would use a package like <code>rdryad</code> to do so, but I have been getting nowhere with any of its functions. It is probably broken as it is soon to be superseded by the <code>deposits</code> package. If I forget to update this website with the latest <code>deposits</code> API, feel free the file an issue on the github repo that contains the source for this webpage.</p>
+<p>In the meantime, let’s download the files one by one.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>base_dryad_url <span class="ot">&lt;-</span> <span class="st">"https://datadryad.org/stash/downloads/file_stream/"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>file_list <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_dryad_url, <span class="fu">c</span>(<span class="dv">37547</span><span class="sc">:</span><span class="dv">37550</span>))</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>files_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"monkeys.txt"</span>, <span class="st">"owls.txt"</span>, <span class="st">"oystercatchers.txt"</span>, <span class="st">"code.txt"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>files_names_list <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"data/"</span>, files_names)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">mapply</span>(\(file_name, file_path) {</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(file_path)) <span class="fu">download.file</span>(file_name, <span class="at">destfile =</span>  file_path)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>}, file_list, files_names_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`https://datadryad.org/stash/downloads/file_stream/37547`
+NULL
+
+$`https://datadryad.org/stash/downloads/file_stream/37548`
+NULL
+
+$`https://datadryad.org/stash/downloads/file_stream/37549`
+NULL
+
+$`https://datadryad.org/stash/downloads/file_stream/37550`
+NULL</code></pre>
+</div>
+</div>
 <section id="step-1-state-appropriate-questions" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-state-appropriate-questions">Step 1: State appropriate questions</h3>
 </section>
