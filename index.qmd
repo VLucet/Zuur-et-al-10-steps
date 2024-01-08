@@ -10,11 +10,35 @@ The 10 steps are all first presented in figure 1 of the paper:
 
 The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages.
 
-I found difficult that the authors chose to use different datasets to illustrate different steps. Why not show the entire workflow for one dataset and better demonstrate the entire workflow? Did the authors fear that the use of a single open dataset was limiting for publication?
-
 #### Accessing data and code for reproducibility
 
-The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning (see the end of this section for a note about package age). To fix that, I used a quarto document with `renv` to produce this website. In order to reproduce the analysis here, you can clone [the repository](https://github.com/VLucet/ZuurIeno10steps) in [RStudio](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git), install the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package, run `renv::restore()` and you should be good to go for running the quarto notebook!
+The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning. To fix that, I used a quarto document with `renv` to produce this website. In order to reproduce the analysis here, you can clone [the repository](https://github.com/VLucet/ZuurIeno10steps) in [RStudio](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git), install the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package, run `renv::restore()` and you should be good to go for running the quarto notebook!
+
+I had to make some changes to the packages used. Let's load what we will need now. Packages `maptools` and `rgdal` are deprecated as far as I can tell, and `sp` is just not recommendable for forward compatibility in 2024.
+
+```{r, message=FALSE}
+# Necessary packages from original code
+library(lattice)  
+library(ggplot2)
+library(ggmap)
+library(lme4)
+library(mgcv)
+
+# Recommended by the authors but outdated
+# library(maptools) => We will use other packages
+# library(sp) => We won't need it with sf
+# library(rgdal) => We won't need it with sf
+
+# Using sf
+library(sf)
+
+# Other additionnal packages to improve upon the provided code
+library(lubridate)
+library(gganimate)
+library(here)
+library(leaflet)
+library(equatiomatic)
+```
 
 In order to access the data and code, we would ideally use a package like [`rdryad`](https://github.com/ropensci/rdryad) to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the [`deposits`](https://github.com/ropenscilabs/deposits) package. If I forget to update this website with the latest [`deposits` API](https://github.com/ropenscilabs/deposits/issues/41), feel free the [file an issue](https://github.com/VLucet/ZuurIeno10steps/issues).
 
@@ -36,7 +60,6 @@ ret <- mapply(\(file_url, file_path) {
 You can take a look at the code in the scripts directory, we will be copying code from there into this document. Now, let's load the data properly before we get anything else done.
 
 ```{r}
-library(here)
 Owls <- read.table(here("data", "owls.txt"), 
                    header = TRUE,
                    dec = ".")
@@ -69,27 +92,6 @@ Monkeys <- read.table(here("data", "monkeys.txt"),
 names(Monkeys)
 str(Monkeys)
 head(Monkeys)
-```
-
-Finally, the load the required packages. Packages `maptools` and `rgdal` are deprecated as far as I can tell, and `sp` is just not recommendable for forward compatibility in 2024. We will attempt to update the spatial code.
-
-```{r, message=FALSE}
-# Necessary packages
-library(lattice)  
-library(ggplot2)
-library(ggmap)
-
-# Recommended by the authors but outdated
-# library(maptools) => We will use other packages
-# library(sp) => We won't need it with sf
-# library(rgdal) => We won't need it with sf
-
-# Using sf
-library(sf)
-
-# Additionnal packages
-library(lubridate)
-library(gganimate)
 ```
 
 ### Step 1: State appropriate questions
@@ -143,7 +145,6 @@ if (!file.exists(owls_kml_file)) {
 The code relied `ggmap`, which makes an API request to Google maps. Of course, in 2024 we are required to use an API key for that. As an alternative I suggest `leaflet` which is more likely to work in the future and does not require to mess with API keys.
 
 ```{r}
-library(leaflet)
 leaflet(Owls_sf_wgs84) %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
   addMarkers()
@@ -254,6 +255,12 @@ p_OC
 
 You should spend a good amount of time on data exploration. It will also help you identify data quality issues and encoding errors.
 
+Note that it is sometimes useful to tabulate data across levels of a given factor.
+
+```{r}
+table(OC$Month, OC$FeedingPlot, OC$FeedingType)
+```
+
 ### Step 4: Identify the dependency structure in the data
 
 The authors warn that it is rare to find a dataset without dependency structures. They advise GLMM as a way to deal with pseudoreplicated data (relying on pooling as a way to properly model dependencies between, say, sampling locations etc..).
@@ -262,13 +269,155 @@ We now move on to the baboon dataset. I think it is the same dataset used in Sta
 
 ![Baboon dataset structure](https://besjournals.onlinelibrary.wiley.com/cms/asset/b2fe00b8-9877-4106-983b-2285c5dd480e/mee312577-fig-0004-m.jpg){fig-align="center"}
 
-The authors suggest to properly report the structure. Personally I love seeing, in papers, when both a graphical and mathematical description is given.
+The authors suggest to properly report the structure. Personally I love seeing, in papers, when both a graphical, a textual AND a mathematical description is given.
+
+The textual description for baboon and owl data:
+
+-   This data set consists of multiple observations of rank differences of a given baboon and receivers within a focal hour, along with multiple observations of a given receiver. We therefore applied a mixed-effects model with the random effect *focal hour* nested within the random effect *baboon* and a crossed random effect *receiver*
+
+-   We sampled each nest multiple times and therefore applied a GLMM in which *nest* is used as random intercept, as this models a dependency structure among sibling negotiation observations of the same nest
 
 ### Step 5: Present the statistical model
 
+Speaking of mathematical description, this step is where the authors suggest this is given and stated clearly, under the form of an equation. Here is what it would look like for the owl data:
+
+![Equation describing the owl data model](https://besjournals.onlinelibrary.wiley.com/cms/asset/ce92caf3-66eb-460f-91d4-66962d9cf7d9/mee312577-math-0001.png){fig-align="center"}
+
+One of the key element in this is how the error structure of the data is stated clearly: here the count of calls is modelled as a Poisson distribution. It shows the log link function and how the model is clearly defined. The authors give further advice for how to explain choices of distributions.
+
+For the baboon data:
+
+![Equation describing the baboon data model](https://besjournals.onlinelibrary.wiley.com/cms/asset/a3750982-7432-4000-beb0-f17477776b03/mee312577-math-0002.png){fig-align="center"}
+
+If only all papers when to that length in describing their models (although I am definitely guilty of omitting details as well). The amazing package [`equatiomatic`](https://datalorax.github.io/equatiomatic/index.html) makes this easier.
+
+```{r}
+# Although we will look at the model formulation at the next step in greater
+# details, let's try and use it here with equationmatic
+
+M1 <- glmer(NCalls ~ FoodTreatment + ArrivalTime + SexParent +
+                     FoodTreatment : SexParent +
+                     FoodTreatment : ArrivalTime +
+                     (1 | Nest),
+            family = poisson,
+            data = Owls)
+extract_eq(M1, wrap = TRUE, terms_per_line = 1)
+```
+
 ### Step 6: Fit the model
 
+The authors first remind that it is important to say what software was used to fit the model, directly in the text. They add details as to how to report a MCMC analysis. This section of the paper is not very verbose and could have been expanded to talk about how versions of packages can be very relevant to the fitted results. Also, the paper could have discussed how fitted models are stored and conserved (with rds files) and implications of all this kind of stuff for the ability of future readers to make sense of the model.
+
+One note concerning the owl dataset: in the code, the authors mention that the response variable should probably be transformed (but for some reason they do not show the process). They also mention that brood size should probably be used an offset in the model - but did not want to confuse readers of the paper with it, at the risk of confusing readers of the code by not explaining why and how the offset is needed here.
+
+Let's see the model again (note the additional code for the offset, if you want, but we won't use it for the sake of consistency with the paper).
+
+```{r}
+#For the offset we need:
+Owls$LogBroodSize <- log(Owls$BroodSize)
+
+library(lme4)
+M1 <- glmer(NCalls ~ FoodTreatment + ArrivalTime + SexParent +
+                     FoodTreatment : SexParent +
+                     FoodTreatment : ArrivalTime +
+                     #offset(LogBroodSize) +  #Feel free to include
+                     (1 | Nest),
+            family = poisson,
+            data = Owls)
+
+# Numerical results:
+summary(M1)
+```
+
 ### Step 7: Validate the model
+
+What is validation? "*Model validation confirms that the model complies with underlying assumptions*."
+
+Regression models have assumptions (in particular about the structure of residuals) and the fore violation of those assumptions may lead to increase bias, type 1 error rate, etc. Residuals should be plotted against all variables (and time and space dimensions if applicable) and autocorellation should be modeled if applicable.
+
+To get to the residuals and fitted values:
+
+```{r}
+E1 <- resid(M1, type = "pearson")
+F1 <- fitted(M1)
+str(E1)
+str(F1)
+```
+
+In the context of the owl data, the authors describe finding a pattern of over dispersion by calculating an over dispersion metric:
+
+```{r}
+# Get the dispersion statistic
+# (not counting random effects as parameters)
+E1 <- resid(M1, type = "pearson")
+N  <- nrow(Owls)
+p  <- length(fixef(M1)) + 1
+sum(E1^2) / (N - p)
+
+```
+
+Not in the paper, they also flag a potential issue with heterogeneity...
+
+```{r}
+plot(x = F1,
+     y = E1,
+     xlab = "Fitted values",
+     ylab = "Pearson residuals")
+abline(h = 0, lty = 2)
+```
+
+Building up to the next figure in the paper, we plot arrival time against those residuals.
+
+```{r}
+plot(x = Owls$ArrivalTime,
+     y = E1,
+     xlab = "Arrival time (h)",
+     ylab = "Pearson residuals")
+abline(h = 0, lty = 2)
+```
+
+Suspecting a non-linear structure, the authors decide to fit a GAM on the residuals. As they write in the code "If the smoother is not significant, or if it explains a small amount of variation, then there are indeed no residual patterns."
+
+```{r}
+T2 <- gam(E1 ~ s(ArrivalTime), data = Owls)
+summary(T2)
+plot(T2)
+abline(h = 0, lty = 2)
+```
+
+Now, we can reproduce the next figure in the paper. The authors used a plotting technique for the predictions which consists in creating a grid of arrival times to feed to the `predict` function. To this we add the smoother and its confidence interval, all of it using `ggplot2`.
+
+```{r}
+time_range <- range(Owls$ArrivalTime)
+MyData <- data.frame(ArrivalTime = seq(time_range[1], time_range[2], 
+                                       length = 100))
+P      <- predict(T2, newdata = MyData, se = TRUE)
+MyData$mu   <- P$fit
+MyData$SeUp <- P$fit + 1.96 * P$se
+MyData$SeLo <- P$fit - 1.96 * P$se
+
+Owls$E1 <- E1
+p_M1 <- ggplot() + 
+  xlab("Arrival time  (h)") + ylab("Pearson residuals") + 
+  theme(text = element_text(size = 15)) + 
+  geom_point(data = Owls,
+             aes(x = ArrivalTime, y = E1),
+             size = 1) + 
+  geom_line(data = MyData,
+            aes(x = ArrivalTime, y = mu),
+            colour = "black") +
+  geom_ribbon(data = MyData,
+              aes(x = ArrivalTime,
+                  ymax = SeUp,
+                  ymin = SeLo ),
+              alpha = 0.2) + 
+  geom_hline(yintercept = 0)
+p_M1
+```
+
+From this exploration of the residuals, the authors conclude that we should be using a GAMM instead...
+
+A couple of notes: the authors mention in a figure caption that the smooth only explains 7% of the variation in the residuals, which as I understand it (maybe badly), is quite low. They also mention other factors that could be responsible for overdispersion: "a missing covariate, the relatively large number of zero observations (25%) or dependency within (or between) nests". The pattern with arrival time seems quite clear, and I am left convinced it should be dealt with in the model. I am not left convinced that a complex GAMM would be the first answer, however.
 
 ### Step 8: Interpret and present the numerical output of the model
 
