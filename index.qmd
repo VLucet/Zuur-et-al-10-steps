@@ -7,3 +7,25 @@ This website in an exploration of "[A protocol for conducting and presenting res
 The 10 steps are all first presented in figure 1 of the paper:
 
 ![The 10 steps](https://besjournals.onlinelibrary.wiley.com/cms/asset/17c3d76c-f2e6-4e2a-a117-581a303cdaef/mee312577-fig-0001-m.png){fig-align="center"}
+
+The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages.
+
+### Step 1: State appropriate questions
+
+### Step 2: Visualize the experimental design
+
+### Step 3: Conduct data exploration
+
+### Step 4: Identify the dependency structure in the data
+
+### Step 5: Present the statistical model
+
+### Step 6: Fit the model
+
+### Step 7: Validate the model
+
+### Step 8: Interpret and present the numerical output of the model
+
+### Step 9: Create a visual representation of the model
+
+### Step 10: Simulate from the model
