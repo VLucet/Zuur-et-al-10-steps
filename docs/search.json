@@ -2,15 +2,15 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ZuurIeno10steps",
+    "title": "Zuur & Ieno’s 10 steps",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "This website in an exploration of “A protocol for conducting and presenting results of regression-type analyses” by Alain F. Zuur, and Elena N. Ieno.\nThe 10 steps are all first presented in figure 1 of the paper:\n\n\n\nThe 10 steps"
   },
   {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
+    "text": "This website in an exploration of “A protocol for conducting and presenting results of regression-type analyses” by Alain F. Zuur, and Elena N. Ieno."
   }
 ]

@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "ZuurIeno10steps"
+  title: "Zuur & Ieno's 10 steps"
   navbar:
     left:
       - href: index.qmd
