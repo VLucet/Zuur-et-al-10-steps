@@ -138,7 +138,7 @@ leaflet(Owls_sf_wgs84) %>%
   addMarkers()
 ```
 
-We can also do a simple `sf` + `ggplot` plot to simplicity.
+We can also do a simple `sf` + `ggplot` plot.
 
 ```{r}
 p <- ggplot(Owls_sf_wgs84)
