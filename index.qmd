@@ -2,15 +2,19 @@
 title: "Zuur & Ieno's 10 steps"
 ---
 
-This website in an exploration of "[A protocol for conducting and presenting results of regression-type analyses](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577)" by Alain F. Zuur, and Elena N. Ieno.
+This website in a reproducible exploration of "[A protocol for conducting and presenting results of regression-type analyses](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577)" by Alain F. Zuur, and Elena N. Ieno.
 
 The 10 steps are all first presented in figure 1 of the paper:
 
 ![The 10 steps](https://besjournals.onlinelibrary.wiley.com/cms/asset/17c3d76c-f2e6-4e2a-a117-581a303cdaef/mee312577-fig-0001-m.png){fig-align="center"}
 
-The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages. In order to access the data and code, which we will reproduce here.
+The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages.
 
-Ideally we would use a package like [`rdryad`](https://github.com/ropensci/rdryad) to do so, but I have been getting nowhere with any of its functions. It is probably broken as it is soon to be superseded by the [`deposits`](https://github.com/ropenscilabs/deposits) package. If I forget to update this website with the latest [`deposits` API](https://github.com/ropenscilabs/deposits/issues/41), feel free the [file an issue](https://github.com/VLucet/ZuurIeno10steps/issues).
+#### Accessing data and code for reproducibility
+
+The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning. To fox that, I used a quarto document with `renv` to produce this website. In order to reproduce the analysis here, you can clone [the repository](https://github.com/VLucet/ZuurIeno10steps) in [RStudio](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git), install the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package, run `renv::restore()` and you should be good to go for running the quarto notebook!
+
+In order to access the data and code, we would ideally use a package like [`rdryad`](https://github.com/ropensci/rdryad) to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the [`deposits`](https://github.com/ropenscilabs/deposits) package. If I forget to update this website with the latest [`deposits` API](https://github.com/ropenscilabs/deposits/issues/41), feel free the [file an issue](https://github.com/VLucet/ZuurIeno10steps/issues).
 
 In the meantime, let's download the files one by one.
 
@@ -27,7 +31,34 @@ ret <- mapply(\(file_url, file_path) {
 }, file_url_list, files_paths_list)
 ```
 
-You can take a look at the code in the data/Now, let's load the data properly
+You can take a look at the code in the scripts directory, we will be copying code from there into this document. Now, let's load the data properly before we get anything else done.
+
+```{r}
+library(here)
+Owls <- read.table(here("data", "owls.txt"), 
+                   header = TRUE,
+                   dec = ".")
+names(Owls)
+str(Owls)
+head(Owls)
+```
+
+```{r}
+Monkeys <- read.table(here("data", "monkeys.txt"), 
+                      header = TRUE)
+names(Monkeys)
+str(Monkeys)
+head(Monkeys)
+```
+
+```{r}
+OC <- read.table(here("data", "oystercatchers.txt"), 
+                 header = TRUE,
+                 dec = ".")
+names(OC)
+str(OC)
+head(OC)
+```
 
 ### Step 1: State appropriate questions
 

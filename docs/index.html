@@ -172,7 +172,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<p>This website in an exploration of “<a href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577">A protocol for conducting and presenting results of regression-type analyses</a>” by Alain F. Zuur, and Elena N. Ieno.</p>
+<p>This website in a reproducible exploration of “<a href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577">A protocol for conducting and presenting results of regression-type analyses</a>” by Alain F. Zuur, and Elena N. Ieno.</p>
 <p>The 10 steps are all first presented in figure 1 of the paper:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -180,8 +180,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption class="figure-caption">The 10 steps</figcaption>
 </figure>
 </div>
-<p>The focus of the 10 steps on on linear modelling of the type <strong>GLM, GLMM</strong> etc and uses R although it generalizes to other languages. In order to access the data and code, which we will reproduce here.</p>
-<p>Ideally we would use a package like <a href="https://github.com/ropensci/rdryad"><code>rdryad</code></a> to do so, but I have been getting nowhere with any of its functions. It is probably broken as it is soon to be superseded by the <a href="https://github.com/ropenscilabs/deposits"><code>deposits</code></a> package. If I forget to update this website with the latest <a href="https://github.com/ropenscilabs/deposits/issues/41"><code>deposits</code> API</a>, feel free the <a href="https://github.com/VLucet/ZuurIeno10steps/issues">file an issue</a>.</p>
+<p>The focus of the 10 steps on on linear modelling of the type <strong>GLM, GLMM</strong> etc and uses R although it generalizes to other languages.</p>
+<section id="accessing-data-and-code-for-reproducibility" class="level4">
+<h4 class="anchored" data-anchor-id="accessing-data-and-code-for-reproducibility">Accessing data and code for reproducibility</h4>
+<p>The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning. To fox that, I used a quarto document with <code>renv</code> to produce this website. In order to reproduce the analysis here, you can clone <a href="https://github.com/VLucet/ZuurIeno10steps">the repository</a> in <a href="https://happygitwithr.com/new-github-first#new-rstudio-project-via-git">RStudio</a>, install the <a href="https://rstudio.github.io/renv/articles/renv.html"><code>renv</code></a> package, run <code>renv::restore()</code> and you should be good to go for running the quarto notebook!</p>
+<p>In order to access the data and code, we would ideally use a package like <a href="https://github.com/ropensci/rdryad"><code>rdryad</code></a> to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the <a href="https://github.com/ropenscilabs/deposits"><code>deposits</code></a> package. If I forget to update this website with the latest <a href="https://github.com/ropenscilabs/deposits/issues/41"><code>deposits</code> API</a>, feel free the <a href="https://github.com/VLucet/ZuurIeno10steps/issues">file an issue</a>.</p>
 <p>In the meantime, let’s download the files one by one.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the file urls and destination files names &amp; names</span></span>
@@ -195,7 +198,126 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">file.exists</span>(file_path)) <span class="fu">download.file</span>(file_url, <span class="at">destfile =</span>  file_path)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}, file_url_list, files_paths_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>You can take a look at the code in the data/Now, let’s load the data properly</p>
+<p>You can take a look at the code in the scripts directory, we will be copying code from there into this document. Now, let’s load the data properly before we get anything else done.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>here() starts at /home/vlucet/Documents/WILDLab/repos/ZuurIeno10steps</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>Owls <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"owls.txt"</span>), </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">dec =</span> <span class="st">"."</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Owls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Nest"               "Xcoord"             "Ycoord"            
+ [4] "FoodTreatment"      "SexParent"          "ArrivalTime"       
+ [7] "SiblingNegotiation" "BroodSize"          "NegPerChick"       
+[10] "Date"               "Day"                "Month"             </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Owls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   599 obs. of  12 variables:
+ $ Nest              : chr  "AutavauxTV" "AutavauxTV" "AutavauxTV" "AutavauxTV" ...
+ $ Xcoord            : int  556216 556216 556216 556216 556216 556216 556216 556216 556216 556216 ...
+ $ Ycoord            : int  188756 188756 188756 188756 188756 188756 188756 188756 188756 188756 ...
+ $ FoodTreatment     : chr  "Deprived" "Deprived" "Deprived" "Deprived" ...
+ $ SexParent         : chr  "Male" "Male" "Male" "Male" ...
+ $ ArrivalTime       : num  22.2 22.5 22.6 22.6 22.6 ...
+ $ SiblingNegotiation: int  4 2 2 2 2 18 18 3 3 3 ...
+ $ BroodSize         : int  5 5 5 5 5 5 5 5 5 5 ...
+ $ NegPerChick       : num  0.8 0.4 0.4 0.4 0.4 3.6 3.6 0.6 0.6 0.6 ...
+ $ Date              : chr  "12/07/97" "12/07/97" "12/07/97" "12/07/97" ...
+ $ Day               : int  12 12 12 12 12 12 12 12 12 12 ...
+ $ Month             : int  7 7 7 7 7 7 7 7 7 7 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Owls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Nest Xcoord Ycoord FoodTreatment SexParent ArrivalTime
+1 AutavauxTV 556216 188756      Deprived      Male       22.25
+2 AutavauxTV 556216 188756      Deprived      Male       22.53
+3 AutavauxTV 556216 188756      Deprived      Male       22.56
+4 AutavauxTV 556216 188756      Deprived      Male       22.61
+5 AutavauxTV 556216 188756      Deprived      Male       22.65
+6 AutavauxTV 556216 188756      Deprived      Male       22.76
+  SiblingNegotiation BroodSize NegPerChick     Date Day Month
+1                  4         5         0.8 12/07/97  12     7
+2                  2         5         0.4 12/07/97  12     7
+3                  2         5         0.4 12/07/97  12     7
+4                  2         5         0.4 12/07/97  12     7
+5                  2         5         0.4 12/07/97  12     7
+6                 18         5         3.6 12/07/97  12     7</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Monkeys <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"monkeys.txt"</span>), </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Monkeys)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "SubordinateGrooms" "DominantGrooms"    "RankDifference"   
+ [4] "Relatedness"       "GroomSymmetry"     "Time"             
+ [7] "FocalHour"         "FocalGroomer"      "Receiver"         
+[10] "GroupSize"        </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Monkeys)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   1674 obs. of  10 variables:
+ $ SubordinateGrooms: chr  "yes" "yes" "yes" "yes" ...
+ $ DominantGrooms   : chr  "no" "yes" "yes" "no" ...
+ $ RankDifference   : num  0.697 0.632 0.169 0.378 0.511 ...
+ $ Relatedness      : num  0.224 0.682 0.707 0.291 0.453 ...
+ $ GroomSymmetry    : int  1 1 0 1 1 1 0 1 1 1 ...
+ $ Time             : num  4.19 5.6 6.16 6.98 2.85 ...
+ $ FocalHour        : int  71 72 72 73 74 75 75 75 75 75 ...
+ $ FocalGroomer     : chr  "ade" "vic" "vic" "pre" ...
+ $ Receiver         : chr  "ban" "yao" "pre" "nai" ...
+ $ GroupSize        : chr  "large" "large" "large" "large" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Monkeys)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  SubordinateGrooms DominantGrooms RankDifference Relatedness GroomSymmetry
+1               yes             no      0.6969321   0.2238303             1
+2               yes            yes      0.6324555   0.6823489             1
+3               yes            yes      0.1690309   0.7071068             0
+4               yes             no      0.3779645   0.2913760             1
+5               yes            yes      0.5107539   0.4529901             1
+6               yes            yes      0.2948839   0.4539824             1
+      Time FocalHour FocalGroomer Receiver GroupSize
+1 4.186111        71          ade      ban     large
+2 5.601667        72          vic      yao     large
+3 6.164167        72          vic      pre     large
+4 6.976111        73          pre      nai     large
+5 2.850556        74          dys      ver     small
+6 8.605278        75          pox      ecz     small</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>OC <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"oystercatchers.txt"</span>), </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">header =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">dec =</span> <span class="st">"."</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(OC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "ShellLength" "Month"       "FeedingType" "FeedingPlot"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(OC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   197 obs. of  4 variables:
+ $ ShellLength: num  1.9 2.16 2.17 2.34 2.2 2.2 1.92 2.11 2.17 2.41 ...
+ $ Month      : chr  "Dec" "Dec" "Dec" "Dec" ...
+ $ FeedingType: chr  "Hammerers" "Hammerers" "Stabbers" "Hammerers" ...
+ $ FeedingPlot: chr  "B" "B" "B" "B" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(OC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ShellLength Month FeedingType FeedingPlot
+1        1.90   Dec   Hammerers           B
+2        2.16   Dec   Hammerers           B
+3        2.17   Dec    Stabbers           B
+4        2.34   Dec   Hammerers           B
+5        2.20   Dec    Stabbers           B
+6        2.20   Dec   Hammerers           B</code></pre>
+</div>
+</div>
+</section>
 <section id="step-1-state-appropriate-questions" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-state-appropriate-questions">Step 1: State appropriate questions</h3>
 </section>
