@@ -38,6 +38,11 @@ library(here)
 Owls <- read.table(here("data", "owls.txt"), 
                    header = TRUE,
                    dec = ".")
+
+# SiblingNegotiation is too long....use shorter name:
+Owls$NCalls <- Owls$SiblingNegotiation
+
+# Let's look at it
 names(Owls)
 str(Owls)
 head(Owls)
@@ -46,6 +51,8 @@ head(Owls)
 ```{r}
 Monkeys <- read.table(here("data", "monkeys.txt"), 
                       header = TRUE)
+
+# Let's look at it
 names(Monkeys)
 str(Monkeys)
 head(Monkeys)
@@ -55,6 +62,8 @@ head(Monkeys)
 OC <- read.table(here("data", "oystercatchers.txt"), 
                  header = TRUE,
                  dec = ".")
+
+# Let's look at it
 names(OC)
 str(OC)
 head(OC)
@@ -69,14 +78,17 @@ library(ggplot2)
 library(ggmap)
 
 # Recommended by the authors but outdated
-# library(maptools)
-# library(sp)
-# library(rgdal)
+# library(maptools) => We will use other packages
+# library(sp) => We won't need it with sf
+# library(rgdal) => We won't need it with sf
+
+# Using sf
+library(sf)
 ```
 
 ### Step 1: State appropriate questions
 
-The key idea is to have the salient question of the analysis in mind at the start, and formulate them properly. The example here is a study on the "vocal behavior of barn owl siblings" with a N = 28. Number of calls is sampled with microphone and the hypothesis is that food availability will influence that. Half the nests get extra food (treatment: satiated) and the other half is starved (treatment: deprived ; surprisingly no control?).
+The key idea is to have the salient question of the analysis in mind at the start, and formulate them properly. The example here is a study on the "vocal behavior of barn owl siblings" with a N = 28. The hypothesis is that food availability will influence "sibling negociation", proxied by the number of calls in the nest, sampled with microphones. Half the nests get extra food (treatment: satiated) and the other half is starved (treatment: deprived ; surprisingly no control?).
 
 The 3 covariates are *time*, *food treatment (satiated or deprived)* and *sex of parent.* The question is :
 
@@ -86,9 +98,55 @@ Note that the question contains the 3 terms and expected interactions.
 
 The authors warn against breaking down the questions into smaller questions such as "Is there an effect of sex of the parent?", as "A potential problem with this approach is that the residuals of one model may show patterns when compared with the covariates not used in that model, which invalidates the model assumptions."
 
-I find this a little surprising because I was taught to build simple models before complex ones, and would naturally work with simpler single covariate models first. The middle ground is probably where the first model you build is a result of a reasoning around the "simplest DAG".
+I find this a little surprising because I was taught to build simple models before complex ones, and would naturally work with simpler single covariate models first.
 
 ### Step 2: Visualize the experimental design
+
+This step is simple yet sometimes overlooked: visualize the sampling protocol and experimental design preferably with the help of a map.
+
+Below we use the `sf` package to parse the data as spatial data.
+
+```{r}
+# Parse the dataframe as a sf object with the proper projection, and reproject as
+# WGS 84 CRS (LAT / LONG)
+Owls_sf <- st_as_sf(Owls, coords = c("Xcoord", "Ycoord"))
+
+WGS84     <- st_crs("+proj=longlat +datum=WGS84")
+projSWISS <- st_crs("+init=epsg:21781")
+st_crs(Owls_sf) <- st_crs(projSWISS)
+
+Owls_sf_wgs84 <- st_transform(Owls_sf, WGS84)
+
+# Write the points as kml, wich you can open in google earth
+owls_kml_file <- here("data", "Owls_wgs84.kml")
+if (!file.exists(owls_kml_file)) {
+  st_write(Owls_sf_wgs84, 
+           owls_kml_file, 
+           driver = "kml", delete_dsn = TRUE)
+}
+
+# Let's look at it
+head(Owls_sf_wgs84)
+```
+
+The code relied on a package that makes an API request to google maps. Of course, in 2024 we are required to use an API key for that. Instead we will use `leaflet` which is more likely to work in the future and does not require to mess with API keys.
+
+```{r}
+library(leaflet)
+leaflet(Owls_sf_wgs84) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers()
+```
+
+We can also do a simple `sf` + `ggplot` plot to simplicity.
+
+```{r}
+p <- ggplot(Owls_sf_wgs84)
+p <- p + geom_sf(size = 4)
+p <- p + xlab("Longitude") + ylab("Latitude")
+p <- p + theme_light() + theme(text = element_text(size = 15))
+p
+```
 
 ### Step 3: Conduct data exploration
 
