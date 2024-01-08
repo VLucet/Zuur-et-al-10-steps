@@ -12,7 +12,7 @@ The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc a
 
 #### Accessing data and code for reproducibility
 
-The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning. To fox that, I used a quarto document with `renv` to produce this website. In order to reproduce the analysis here, you can clone [the repository](https://github.com/VLucet/ZuurIeno10steps) in [RStudio](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git), install the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package, run `renv::restore()` and you should be good to go for running the quarto notebook!
+The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning (see the end of this section for a note about package age). To fix that, I used a quarto document with `renv` to produce this website. In order to reproduce the analysis here, you can clone [the repository](https://github.com/VLucet/ZuurIeno10steps) in [RStudio](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git), install the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package, run `renv::restore()` and you should be good to go for running the quarto notebook!
 
 In order to access the data and code, we would ideally use a package like [`rdryad`](https://github.com/ropensci/rdryad) to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the [`deposits`](https://github.com/ropenscilabs/deposits) package. If I forget to update this website with the latest [`deposits` API](https://github.com/ropenscilabs/deposits/issues/41), feel free the [file an issue](https://github.com/VLucet/ZuurIeno10steps/issues).
 
@@ -60,7 +60,33 @@ str(OC)
 head(OC)
 ```
 
+Finally, the load the required packages. Packages `maptools` and `rgdal` are deprecated as far as I can tell, and `sp` is just not recommendable for forward compatibility in 2024. We will attempt to update the spatial code.
+
+```{r, message=FALSE}
+# Necessary packages
+library(lattice)  
+library(ggplot2)
+library(ggmap)
+
+# Recommended by the authors but outdated
+# library(maptools)
+# library(sp)
+# library(rgdal)
+```
+
 ### Step 1: State appropriate questions
+
+The key idea is to have the salient question of the analysis in mind at the start, and formulate them properly. The example here is a study on the "vocal behavior of barn owl siblings" with a N = 28. Number of calls is sampled with microphone and the hypothesis is that food availability will influence that. Half the nests get extra food (treatment: satiated) and the other half is starved (treatment: deprived ; surprisingly no control?).
+
+The 3 covariates are *time*, *food treatment (satiated or deprived)* and *sex of parent.* The question is :
+
+-   Does the relationship between sibling negotiation and sex of the parent differ with food treatment, and does the effect of time on sibling negotiation differ with food treatment?
+
+Note that the question contains the 3 terms and expected interactions.
+
+The authors warn against breaking down the questions into smaller questions such as "Is there an effect of sex of the parent?", as "A potential problem with this approach is that the residuals of one model may show patterns when compared with the covariates not used in that model, which invalidates the model assumptions."
+
+I find this a little surprising because I was taught to build simple models before complex ones, and would naturally work with simpler single covariate models first. The middle ground is probably where the first model you build is a result of a reasoning around the "simplest DAG".
 
 ### Step 2: Visualize the experimental design
 

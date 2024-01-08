@@ -183,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The focus of the 10 steps on on linear modelling of the type <strong>GLM, GLMM</strong> etc and uses R although it generalizes to other languages.</p>
 <section id="accessing-data-and-code-for-reproducibility" class="level4">
 <h4 class="anchored" data-anchor-id="accessing-data-and-code-for-reproducibility">Accessing data and code for reproducibility</h4>
-<p>The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning. To fox that, I used a quarto document with <code>renv</code> to produce this website. In order to reproduce the analysis here, you can clone <a href="https://github.com/VLucet/ZuurIeno10steps">the repository</a> in <a href="https://happygitwithr.com/new-github-first#new-rstudio-project-via-git">RStudio</a>, install the <a href="https://rstudio.github.io/renv/articles/renv.html"><code>renv</code></a> package, run <code>renv::restore()</code> and you should be good to go for running the quarto notebook!</p>
+<p>The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning (see the end of this section for a note about package age). To fix that, I used a quarto document with <code>renv</code> to produce this website. In order to reproduce the analysis here, you can clone <a href="https://github.com/VLucet/ZuurIeno10steps">the repository</a> in <a href="https://happygitwithr.com/new-github-first#new-rstudio-project-via-git">RStudio</a>, install the <a href="https://rstudio.github.io/renv/articles/renv.html"><code>renv</code></a> package, run <code>renv::restore()</code> and you should be good to go for running the quarto notebook!</p>
 <p>In order to access the data and code, we would ideally use a package like <a href="https://github.com/ropensci/rdryad"><code>rdryad</code></a> to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the <a href="https://github.com/ropenscilabs/deposits"><code>deposits</code></a> package. If I forget to update this website with the latest <a href="https://github.com/ropenscilabs/deposits/issues/41"><code>deposits</code> API</a>, feel free the <a href="https://github.com/VLucet/ZuurIeno10steps/issues">file an issue</a>.</p>
 <p>In the meantime, let’s download the files one by one.</p>
 <div class="cell">
@@ -317,9 +317,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 6        2.20   Dec   Hammerers           B</code></pre>
 </div>
 </div>
+<p>Finally, the load the required packages. Packages <code>maptools</code> and <code>rgdal</code> are deprecated as far as I can tell, and <code>sp</code> is just not recommendable for forward compatibility in 2024. We will attempt to update the spatial code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Necessary packages</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)  </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Recommended by the authors but outdated</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># library(maptools)</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># library(sp)</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co"># library(rgdal)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="step-1-state-appropriate-questions" class="level3">
 <h3 class="anchored" data-anchor-id="step-1-state-appropriate-questions">Step 1: State appropriate questions</h3>
+<p>The key idea is to have the salient question of the analysis in mind at the start, and formulate them properly. The example here is a study on the “vocal behavior of barn owl siblings” with a N = 28. Number of calls is sampled with microphone and the hypothesis is that food availability will influence that. Half the nests get extra food (treatment: satiated) and the other half is starved (treatment: deprived ; surprisingly no control?).</p>
+<p>The 3 covariates are <em>time</em>, <em>food treatment (satiated or deprived)</em> and <em>sex of parent.</em> The question is :</p>
+<ul>
+<li>Does the relationship between sibling negotiation and sex of the parent differ with food treatment, and does the effect of time on sibling negotiation differ with food treatment?</li>
+</ul>
+<p>Note that the question contains the 3 terms and expected interactions.</p>
+<p>The authors warn against breaking down the questions into smaller questions such as “Is there an effect of sex of the parent?”, as “A potential problem with this approach is that the residuals of one model may show patterns when compared with the covariates not used in that model, which invalidates the model assumptions.”</p>
+<p>I find this a little surprising because I was taught to build simple models before complex ones, and would naturally work with simpler single covariate models first. The middle ground is probably where the first model you build is a result of a reasoning around the “simplest DAG”.</p>
 </section>
 <section id="step-2-visualize-the-experimental-design" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-visualize-the-experimental-design">Step 2: Visualize the experimental design</h3>
