@@ -6,7 +6,7 @@ This website in a reproducible exploration of "[A protocol for conducting and pr
 
 The 10 steps are all first presented in figure 1 of the paper:
 
-![The 10 steps](https://besjournals.onlinelibrary.wiley.com/cms/asset/17c3d76c-f2e6-4e2a-a117-581a303cdaef/mee312577-fig-0001-m.png){fig-align="center"}
+![The 10 steps of regression analyses.](https://besjournals.onlinelibrary.wiley.com/cms/asset/17c3d76c-f2e6-4e2a-a117-581a303cdaef/mee312577-fig-0001-m.png){fig-align="center"}
 
 The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages.
 
@@ -84,6 +84,10 @@ library(ggmap)
 
 # Using sf
 library(sf)
+
+# Additionnal packages
+library(lubridate)
+library(gganimate)
 ```
 
 ### Step 1: State appropriate questions
@@ -168,7 +172,7 @@ p_simple <- ggplot(Owls_sf_wgs84) +
 p_simple
 ```
 
-Finally, the code suggest another plot of the time series which is not in the paper, and which I adapted here for consistency.
+Finally, the code suggest another two plots that are not in the paper, but are useful. The first time is a plot of the time series.
 
 ```{r, fig.height=10, fig.width=8}
 p_series <- ggplot() + 
@@ -188,7 +192,40 @@ p_series <- ggplot() +
 p_series
 ```
 
+The second shows how sampling unfolds across space and time, but I find the plot a little unwieldy as it facets multiple maps.
+
+```{r, fig.height=10, fig.width=8}
+# We parse the date column as a proper date
+Owls_sf_wgs84$Date_parsed <- as_date(Owls_sf_wgs84$Date, format = "%d/%m/%y")
+
+p_ggmap_facet <- ggmap(glgmap) + 
+  geom_point(aes(X, Y),
+             data = Owls_sf_wgs84,
+             size = 4) + 
+  xlab("Longitude") + ylab("Latitude") + 
+  theme(text = element_text(size = 15)) + 
+  facet_wrap(~Date_parsed) 
+
+p_ggmap_facet
+```
+
 ### Step 3: Conduct data exploration
+
+There is another even older Zurr et al. paper for the [10 steps of data exploration](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577#mee312577-bib-0040). The first fogure of that paper gives you the gist of the protocol.
+
+![The 10 steps for data exploration.](https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif){fig-align="center"}
+
+In that paper, the authors warn against "data dredging", which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hyotheses, but that is fundamentally different from the principled workflow of this paper.
+
+Then, the authors warn against certain tests and visual tools, including normality tests. The paper is a useful read and could be the next iteration of that project.
+
+I found difficult that the authors chose to use a different dataset to illustrate that step. Why not show the entire workflow for one dataset and better demonstrate the whole workflow? Did the authors fear that the use of a single open dataset was limiting for publication? Were they asked to do by reviewers? Did they feel like they could not re-do someone else's analysis as they would make different choices and did not want to get into that? In any case, we move from owls to oystercatchers.
+
+The study related the length of clams preyed upon and the feeding behavior of oystercatchers, accross time and space. The authors decrsibe how the design suggests a 3-way interaction term that would in practicality only be driven by a couple of data points. The following plot shows that in location A in December, there were only two observations, both showing the same value.
+
+```{r}
+
+```
 
 ### Step 4: Identify the dependency structure in the data
 
