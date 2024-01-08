@@ -115,8 +115,16 @@ WGS84     <- st_crs("+proj=longlat +datum=WGS84")
 projSWISS <- st_crs("+init=epsg:21781")
 st_crs(Owls_sf) <- st_crs(projSWISS)
 
-Owls_sf_wgs84 <- st_transform(Owls_sf, WGS84)
+Owls_sf_tmp <- st_transform(Owls_sf, WGS84)
+Owls_sf_wgs84 <- cbind(Owls_sf_tmp, st_coordinates(Owls_sf_tmp))
 
+# Let's look at it
+head(Owls_sf_wgs84)
+```
+
+The code suggests to write the points as a .kml file to open in Google Earth.
+
+```{r}
 # Write the points as kml, wich you can open in google earth
 owls_kml_file <- here("data", "Owls_wgs84.kml")
 if (!file.exists(owls_kml_file)) {
@@ -124,12 +132,9 @@ if (!file.exists(owls_kml_file)) {
            owls_kml_file, 
            driver = "kml", delete_dsn = TRUE)
 }
-
-# Let's look at it
-head(Owls_sf_wgs84)
 ```
 
-The code relied on a package that makes an API request to google maps. Of course, in 2024 we are required to use an API key for that. Instead we will use `leaflet` which is more likely to work in the future and does not require to mess with API keys.
+The code relied `ggmap`, which makes an API request to google maps. Of course, in 2024 we are required to use an API key for that. As an alternative I suggest `leaflet` which is more likely to work in the future and does not require to mess with API keys.
 
 ```{r}
 library(leaflet)
@@ -138,14 +143,49 @@ leaflet(Owls_sf_wgs84) %>%
   addMarkers()
 ```
 
+For a more publication-oriented map with `ggmap` I would recommend using the stadiamap API.
+
+```{r}
+# I suppress the API message
+glgmap <- suppressMessages(get_stadiamap(c(6.7, 46.70, 7.2, 46.96)))
+
+p_ggmap <- ggmap(glgmap) + 
+  geom_point(aes(X, Y),
+             data = Owls_sf_wgs84,
+             size = 4) + 
+  xlab("Longitude") + ylab("Latitude") + 
+  theme(text = element_text(size = 15))
+p_ggmap
+```
+
 We can also do a simple `sf` + `ggplot` plot.
 
 ```{r}
-p <- ggplot(Owls_sf_wgs84)
-p <- p + geom_sf(size = 4)
-p <- p + xlab("Longitude") + ylab("Latitude")
-p <- p + theme_light() + theme(text = element_text(size = 15))
-p
+p_simple <- ggplot(Owls_sf_wgs84) + 
+  geom_sf(size = 4) + 
+  xlab("Longitude") + ylab("Latitude") + 
+  theme_light() + theme(text = element_text(size = 15))
+p_simple
+```
+
+Finally, the code suggest another plot of the time series which is not in the paper, and which I adapted here for consistency.
+
+```{r, fig.height=10, fig.width=8}
+p_series <- ggplot() + 
+  xlab("Arrival time") + ylab("Number of calls") + 
+  theme(text = element_text(size = 15)) + theme_light() +
+  geom_point(data = Owls_sf_wgs84,
+             aes(x = ArrivalTime,
+                 y = NCalls,
+                 color = FoodTreatment),
+             size = 2) +
+  geom_line(data = Owls_sf_wgs84,
+            aes(x = ArrivalTime,
+                y = NCalls,
+                group = FoodTreatment,
+                color = FoodTreatment)) + 
+  facet_wrap( ~ Nest, ncol = 4)
+p_series
 ```
 
 ### Step 3: Conduct data exploration
