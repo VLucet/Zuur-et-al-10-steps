@@ -8,7 +8,7 @@ The 10 steps are all first presented in figure 1 of the paper:
 
 ![The 10 steps for data exploration.](https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif){alt="The 10 steps for data exploration." fig-align="center"}
 
-In this paper, the authors first warn against "data dredging", which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hyotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.
+In this paper, the authors first warn against "data dredging", which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hypotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.
 
 #### Accessing data and code for reproducibility
 
