@@ -16,12 +16,19 @@ Let's first load the relevant packages for this analysis.
 
 ```{r, message=FALSE}
 # Necessary packages from original code
+library(lattice)
 
 # Other additionnal packages to improve upon the provided code
-
+library(here)
 ```
 
-Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick`.
+Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick_2010`.
+
+Again, the authors provide custom functions that need to be sourced. Like in the 2016 paper, they suggest about that code that "It is perhaps better not to try and understand what it all does"...
+
+```{r}
+source(here("data", "zuur_ieno_elphick_2010", "HighstatLib.r"))
+```
 
 ### Step 10: Formulate hypotheses, carry out experiments and data collection
 
