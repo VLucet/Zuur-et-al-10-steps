@@ -1,0 +1,32 @@
+
+model{
+    #Priors regression parameters, theta
+    for (i in 1:K) { beta[i]  ~ dnorm(0, 0.0001) }
+    theta ~ dunif(0, 20)
+
+    #Priors random effects
+    for (i in 1: NumFGroomer) {a[i] ~ dnorm(0, tau.gr) }
+    for (i in 1: NumFHour)    {b[i] ~ dnorm(0, tau.fh) }
+    for (i in 1: NumReceiver) {c[i] ~ dnorm(0, tau.rc) }
+
+    #Priors for the variances of the random effects
+    tau.gr <- 1 / (sigma.gr * sigma.gr)
+    tau.fh <- 1 / (sigma.fh * sigma.fh)
+    tau.rc <- 1 / (sigma.rc * sigma.rc)
+
+    sigma.gr ~ dunif(0, 10)
+    sigma.fh ~ dunif(0, 10)
+    sigma.rc ~ dunif(0, 10)
+
+    #######################
+    #Likelihood
+    for (i in 1:N){
+      Y[i] ~ dbeta(shape1[i], shape2[i])
+      shape1[i] <- theta * pi[i]
+      shape2[i] <- theta * (1 - pi[i])
+
+      logit(pi[i]) <- eta[i] + a[reFGroomer[i]] + b[reFHour[i]] + c[reRec[i]]
+      eta[i]       <- inprod(beta[], X[i,])
+  }
+}
+

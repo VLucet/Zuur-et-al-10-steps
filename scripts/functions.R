@@ -84,3 +84,17 @@ uNames <- function(k,Q){
   String
 }
 # End of support code from Zuur et al.(2013).
+
+# Calculate the posterior mean and 95% CI for each value on the grid
+# See Zuur et al. (2013) and Zuur et al. (2016) for an explanation.
+MyLinesStuff <- function(x) {
+  OUT <- matrix(nrow = nrow(x), ncol = 4)
+  for (i in 1:nrow(x)) {
+    xi <- x[i,]
+    OUT[i,3:4] <- quantile(xi, probs = c(0.025, 0.975))
+    OUT[i,1] <- mean(xi)
+    OUT[i,2] <- sd(xi)
+  }
+  colnames(OUT) <- c("mean", "se", "2.5%", "97.5%")
+  OUT
+}

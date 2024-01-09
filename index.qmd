@@ -23,6 +23,8 @@ library(ggplot2)
 library(ggmap)
 library(lme4)
 library(mgcv)
+library(R2jags)
+library(plyr)
 
 # Recommended by the authors but outdated
 # library(maptools) => We will use other packages
@@ -33,11 +35,17 @@ library(mgcv)
 library(sf)
 
 # Other additionnal packages to improve upon the provided code
+# We also setup for rgl plots in the webpage
 library(lubridate)
 library(gganimate)
 library(here)
 library(leaflet)
 library(equatiomatic)
+library(knitr)
+library(stargazer)
+library(sjPlot)
+library(rgl) ; knitr::knit_hooks$set(webgl = hook_webgl)
+library(htmlwidgets)
 ```
 
 In order to access the data and code, we would ideally use a package like [`rdryad`](https://github.com/ropensci/rdryad) to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the [`deposits`](https://github.com/ropenscilabs/deposits) package. If I forget to update this website with the latest [`deposits` API](https://github.com/ropenscilabs/deposits/issues/41), feel free the [file an issue](https://github.com/VLucet/ZuurIeno10steps/issues).
@@ -228,7 +236,7 @@ We now move from owls to oystercatchers. The study related the length of clams p
 # Set a color column
 OC$color_pt <- ifelse(OC$Month == "Dec" & 
                         OC$FeedingType == "Stabbers" & 
-                          OC$FeedingPlot == "A", 
+                        OC$FeedingPlot == "A", 
                       "red", "grey")
 
 # Here is the code for Figure 3
@@ -329,6 +337,154 @@ M1 <- glmer(NCalls ~ FoodTreatment + ArrivalTime + SexParent +
 summary(M1)
 ```
 
+For the Bayesian baboon models, the code to run the model is given later in the script, but it is more appropriately shown here. You can skip this part if you are not familiar with Bayesian methods as this might be more confusing than anything. The authors re-use an example from the course they teach and only provide the minimal code needed to run the model which makes it difficult to get the full picture. That part of the provided code lacks the model validation section, and provide functions (which I have placed in a separate file for simplicity) about which the authors say the reader should not "bother trying to understand"...). Still, let's source those functions.
+
+```{r}
+source(here("scripts", "functions.R"))
+```
+
+One of the relevant question to the analysis, which is provided as a code comment (instead of being mentioned in step 1, as I think it should have been) is that Subordinates should prefer to groom more dominant animals earlier in the day. To look at this we need to subset the data.
+
+```{r}
+Monkeys_sub <- Monkeys[Monkeys$SubordinateGrooms == "yes",]
+```
+
+Then we prepare the model data to run with JAGS.
+
+```{r}
+# Transfor the response variable:
+N <- nrow(Monkeys_sub)
+Monkeys_sub$RD.scaled <- (Monkeys_sub$RankDifference * (N - 1) + 0.5) / N
+
+# A full explanation  of zero inflatedbeta models is provided in 
+# Zuur's Beginner's Guide to Zero-Inflated Models with R' 
+
+# For MCMC it is essential to standardize continuous covariates
+Mystd <- function(x) {(x - mean(x)) / sd(x)}
+Monkeys_sub$Time.std        <- Mystd(Monkeys_sub$Time)
+Monkeys_sub$Relatedness.std <- Mystd(Monkeys_sub$Relatedness)
+
+# JAGS coding
+# Create X matrix
+X <- model.matrix(~Time.std * Relatedness.std + Relatedness.std * GroupSize,
+                  data = Monkeys_sub)
+K <- ncol(X)
+
+# Random effects:
+reFocalGroomer  <- as.numeric(as.factor(Monkeys_sub$FocalGroomer))
+NumFocalGroomer <- length(unique(Monkeys_sub$FocalGroomer))
+
+reFocalHour  <- as.numeric(as.factor(Monkeys_sub$FocalHour))
+NumFocalHour <- length(unique(Monkeys_sub$FocalHour))
+
+reReceiver  <- as.numeric(as.factor(Monkeys_sub$Receiver))
+NumReceiver <- length(unique(Monkeys_sub$Receiver))
+
+#Put all data for JAGS in a list
+JAGS.data <- list(Y            = Monkeys_sub$RD.scaled,
+                  N            = nrow(Monkeys_sub),
+                  X            = X,
+                  K            = ncol(X),
+                  reFGroomer   = reFocalGroomer,
+                  NumFGroomer  = NumFocalGroomer,
+                  reFHour      = reFocalHour,
+                  NumFHour     = NumFocalHour,
+                  reRec        = reReceiver,
+                  NumReceiver  = NumReceiver
+)
+str(JAGS.data)
+```
+
+We then run the chains. I do not run the updates as they take too much time on my laptop, hence why the results might not be matching perfectly the reported numbers in the paper.
+
+```{r}
+# JAGS code
+jags_file_path <- here("jags", "BetaRegmm.txt")
+
+if (!file.exists(jags_file_path)) {
+  sink(jags_file_path)
+  cat("
+model{
+    #Priors regression parameters, theta
+    for (i in 1:K) { beta[i]  ~ dnorm(0, 0.0001) }
+    theta ~ dunif(0, 20)
+
+    #Priors random effects
+    for (i in 1: NumFGroomer) {a[i] ~ dnorm(0, tau.gr) }
+    for (i in 1: NumFHour)    {b[i] ~ dnorm(0, tau.fh) }
+    for (i in 1: NumReceiver) {c[i] ~ dnorm(0, tau.rc) }
+
+    #Priors for the variances of the random effects
+    tau.gr <- 1 / (sigma.gr * sigma.gr)
+    tau.fh <- 1 / (sigma.fh * sigma.fh)
+    tau.rc <- 1 / (sigma.rc * sigma.rc)
+
+    sigma.gr ~ dunif(0, 10)
+    sigma.fh ~ dunif(0, 10)
+    sigma.rc ~ dunif(0, 10)
+
+    #######################
+    #Likelihood
+    for (i in 1:N){
+      Y[i] ~ dbeta(shape1[i], shape2[i])
+      shape1[i] <- theta * pi[i]
+      shape2[i] <- theta * (1 - pi[i])
+
+      logit(pi[i]) <- eta[i] + a[reFGroomer[i]] + b[reFHour[i]] + c[reRec[i]]
+      eta[i]       <- inprod(beta[], X[i,])
+  }
+}
+", fill = TRUE)
+  sink()
+}
+
+# Set the initial values for the betas and sigma
+inits <- function() {
+  list(
+    beta  = rnorm(ncol(X), 0, 0.1),
+    theta = runif(0, 20),
+    sigma.gr = runif(0, 10),
+    sigma.fh = runif(0, 10),
+    sigma.rc = runif(0, 10)
+  )  }
+
+#Parameters to estimate
+params <- c("beta", "theta",
+            "sigma.gr", "sigma.fh", "sigma.rc")
+
+model_path <- here("jags", "J0.rds")
+
+if (!file.exists(model_path)) {
+  J0 <- jags(data = JAGS.data,
+             inits = inits,
+             parameters = params,
+             model.file = jags_file_path,
+             n.thin = 10,
+             n.chains = 3,
+             n.burnin = 4000,
+             n.iter   = 5000)
+  saveRDS(J0, model_path) 
+} else {
+  J0 <- readRDS(model_path)
+}
+
+# Fast computer:
+# J1  <- update(J0, n.iter = 10000, n.thin = 10)
+# J2  <- update(J1, n.iter = 50000, n.thin = 10)
+# out <- J2$BUGSoutput
+
+out <- J0$BUGSoutput
+str(out)
+```
+
+We process the results of the Bayesian model.
+
+```{r, fig.height=10, fig.width=8}
+# Assess chain mixing (an indication of how well the model ran)
+MyBUGSChains(out,
+             c(uNames("beta", K), "theta", "sigma.gr", "sigma.fh", "sigma.rc"))
+```
+
 ### Step 7: Validate the model
 
 What is validation? "*Model validation confirms that the model complies with underlying assumptions*."
@@ -391,7 +547,7 @@ Now, we can reproduce the next figure in the paper. The authors used a plotting 
 time_range <- range(Owls$ArrivalTime)
 MyData <- data.frame(ArrivalTime = seq(time_range[1], time_range[2], 
                                        length = 100))
-P      <- predict(T2, newdata = MyData, se = TRUE)
+P <- predict(T2, newdata = MyData, se = TRUE)
 MyData$mu   <- P$fit
 MyData$SeUp <- P$fit + 1.96 * P$se
 MyData$SeLo <- P$fit - 1.96 * P$se
@@ -419,8 +575,219 @@ From this exploration of the residuals, the authors conclude that we should be u
 
 A couple of notes: the authors mention in a figure caption that the smooth only explains 7% of the variation in the residuals, which as I understand it (maybe badly), is quite low. They also mention other factors that could be responsible for overdispersion: "a missing covariate, the relatively large number of zero observations (25%) or dependency within (or between) nests". The pattern with arrival time seems quite clear, and I am left convinced it should be dealt with in the model. I am not left convinced that a complex GAMM would be the first answer, however.
 
+Validation for the baboon bayesian model is not present in the code.
+
 ### Step 8: Interpret and present the numerical output of the model
+
+Interpreting complex regression results in R can be complicated, especially when it comes to interaction terms and how they change intercepts and slopes. The authors suggest to report the main results in a table: "estimated parameters, standard errors, t-values, R2 and the estimated variance". For mixed effects models: report multiple variances, calculate intraclass correlation to derive the R2. For GAMs/GAMMs, make sure to report the effective df of smoothers.
+
+The authors report the controversies around reporting p-values. They say: "Their interpretation is prone to abuse, and, for most of the frequentist techniques mentioned, *P*-values are approximate at best. They must be interpreted with care, and this should be emphasized in the paper. An alternative is to present 95% confidence intervals for the regression parameters and effect size estimates and their precision ".
+
+Concerning the owl model, writing out the actual effects might help. Here I insert the next equation in the paper:
+
+![Equation expanded for the owl model](https://besjournals.onlinelibrary.wiley.com/cms/asset/75975d41-4e84-4afe-9657-9529d9952eab/mee312577-math-0003.png){fig-align="center"}
+
+The authors simply report the Fixed effects table from `summary(M1)`.
+
+```{r}
+M1_sum <- summary(M1)
+M1_table <- M1_sum$coefficients |> as.data.frame()
+print(M1_table)
+```
+
+In reports, these table came be outputted to a markdown table and nicely formatted.
+
+```{r}
+kable(M1_table)
+```
+
+Alternatively, one can use a package designed to deal with tables specifically, such as `gtable` (for structured tables with tidy data), or more appropriately here, `stargazer` (to compare models) or `sjPlot`.
+
+```{r, results='asis'}
+# Here we use the html for this report, and note the results='asis' code chunck 
+# options, but stargazer has other output format options
+stargazer(M1, type = "html", flip = TRUE)
+```
+
+```{r}
+tab_model(M1)
+```
+
+The values in the last equation are produced by expanding the correct values from the table into the formula. Note that here, "the overdispersion and nonlinear pattern in the Pearson residuals invalidate the results".
+
+For MCMC models, the same is applicable. Here is what the equation would look like for a model like the baboon data example (for large groups, as for small groups there need to be a correction, see the paper for the resulting equation):
+
+![Expanded equation for baboon model](https://besjournals.onlinelibrary.wiley.com/cms/asset/327ce41c-700f-4b62-b5e4-02b0f69494aa/mee312577-math-0004.png){fig-align="center"}
+
+The table for this model is treated similarly with kable.
+
+```{r}
+# present output
+OUT1 <- MyBUGSOutput(out,
+                     c(uNames("beta", K), "sigma.gr", "sigma.fh", "sigma.rc", "theta"))
+rownames(OUT1)[1:K] <- colnames(X)
+print(OUT1, digits = 5)
+```
+
+```{r}
+kable(OUT1)
+```
+
+I am not aware of any packages for pretty printing of JAGS model output tables.
 
 ### Step 9: Create a visual representation of the model
 
+This is usually the main "results" figure: a visual plotting of the model in action. One should strive to avoid plotting redundant information while still showing the fitted values and the model variance.
+
+Again, the authors remind owl GLMM is "overdispersed, and the residuals contained nonlinear patterns", which could be improved with a GAMM with nonlinear time arrival effect (then, why not show that, instead of reminding us many times in the paper and the code how bad the analysis actually is). But let's imagine the GLMM was sufficient and reproduce the next figure in the pap?er. The comments in the original code are quite useful here. I just modified the code to remove a warning.
+
+```{r}
+# A. Specify covariate values for predictions
+MyData <- ddply(Owls,
+                .(SexParent, FoodTreatment),
+                summarize,
+                ArrivalTime = seq(from = min(ArrivalTime),
+                                  to = max(ArrivalTime),
+                                  length = 10))
+
+# B. Create X matrix with expand.grid
+X <- model.matrix(~ FoodTreatment + ArrivalTime + SexParent +
+                    FoodTreatment:SexParent +
+                    FoodTreatment:ArrivalTime,
+                  data = MyData)
+
+# C. Calculate predicted values
+MyData$eta <- X %*% fixef(M1)
+MyData$mu  <- exp(MyData$eta)
+
+# D. Calculate standard errors (SE) for predicted values
+# SE of fitted values are given by the square root of
+# the diagonal elements of: X * cov(betas) * t(X)
+MyData$SE   <- sqrt(diag(X %*% vcov(M1) %*% t(X)))
+MyData$seup <- exp(MyData$eta + 1.96 * MyData$SE)
+MyData$selo <- exp(MyData$eta - 1.96 * MyData$SE)
+
+# E. Plot predicted values +/- 2* SE
+p_fitted <- ggplot() + 
+  xlab("Arrival time (h)") + ylab("Number of calls") +
+  geom_point(data = Owls,
+             aes(x = ArrivalTime, y = NCalls),
+             position = position_jitter(width = .01),
+             color = grey(0.2),
+             size = 1) +
+  geom_line(data = MyData,
+            aes(x = ArrivalTime,
+                y = mu)) +
+  geom_ribbon(data = MyData,
+              aes(x = ArrivalTime,
+                  ymax = seup,
+                  ymin = selo),
+              alpha = 0.5) + 
+  facet_grid(SexParent ~ FoodTreatment,
+             scales = "fixed") +
+  theme_light() + theme(text = element_text(size = 15)) + 
+  theme(legend.position = "none")
+p_fitted
+```
+
+For the baboon model, the authors recommends to plot the model fit in a way that highlights the interactions between the continuous and categorical covariate, as well as between the two continuous covariates. I prefer the paste the entire quote that justifies the 3D plot:
+
+-   The figure "shows two planes, one representing the small group and for the other representing the large group. The small group exhibited a positive effect of relatedness on rank differences early in the day and a negative effect later in the day, as well as a negative time effect for low relatedness values and a positive time effect for higher relatedness values. The large group shows a negative relatedness effect early in the day".
+
+The code was written before R 4.0 and the breaking change concerning characters no longer being read as factors when loading the data, so we need to change another couple of things to get the expected behavior as well. Let's get the predictions ready.
+
+```{r}
+#Get the realisations of the betas
+Beta.mcmc <- out$sims.list$beta
+
+# Create a grid of covariate values
+time_range <- range(Monkeys_sub$Time.std)
+relate_range <- range(Monkeys_sub$Relatedness.std)
+MyData <- 
+  expand.grid(Time.std = seq(time_range[1], time_range[2], length = 15),
+              Relatedness.std = seq(relate_range[1], relate_range[2], length = 15),
+              GroupSize = levels(as.factor(Monkeys_sub$GroupSize)))
+
+# Convert the grid into a X matrix, and calculate the fitted
+# values for each (!) MCMC iteration
+X <- model.matrix(~Time.std * Relatedness.std +
+                    Relatedness.std * GroupSize,
+                  data = MyData)
+Betas <- Beta.mcmc
+eta   <- X %*% t(Betas)
+mu    <- exp(eta) / (1 + exp(eta))
+
+L <- MyLinesStuff(mu)
+str(L) #Posterior mean, se and 95% CI for each of these covariate values
+
+#Glue the results in L to the MyData object
+MyData <- cbind(MyData,L)
+str(MyData)
+```
+
+The code to make figure 8 is not like in the paper.
+
+```{r}
+# In the paper we use a slighly different angle. Change
+# the i value, or put a loop around this code in which i
+# runs form 1 to 1000.
+i <- 70
+p_3D <- wireframe(mean ~ Time.std + Relatedness.std, 
+                  data = MyData,
+                  group = GroupSize,
+                  #zlim = c(0,1),
+                  shade = TRUE,
+                  scales = list(arrows = FALSE),
+                  drape = TRUE, 
+                  colorkey = FALSE,
+                  screen = list(z = i, x = -60 - i /5))
+print(p_3D)
+```
+
+So let's try and use a better solution. Both `rgl` and `plotly` are great for 3D plotting. Let's give `rgl` a try.
+
+```{r, webgl=TRUE}
+plot3d( 
+  y = MyData$Relatedness.std, 
+  z = MyData$mean, 
+  x = MyData$Time.std, 
+  # col = data$color, 
+  type = 's', 
+  radius = .1,
+  ylab = "Relatedness std", zlab = "Mean", xlab = "Time.std"
+)
+
+# saveWidget(rglwidget(width = 520, height = 520), 
+#            file = here("widgets", "rgl_plot.html"),
+#            libdir = "libs",
+#            selfcontained = FALSE
+# )
+```
+
 ### Step 10: Simulate from the model
+
+In this section the authors simulate from the model and show that the model underestimates the amount of 0s.
+
+```{r, fig.height=6, fig.width=6}
+N <- nrow(Owls)
+gg <- simulate(M1, 10000)
+
+zeros <- vector(length = 10000)
+for (i in 1:10000) {
+  zeros[i] <- sum(gg[,i] == 0) / N
+}
+
+plot(table(zeros), 
+     xlim = c(0, 160 / N),
+     axes = FALSE,
+     xlab = "Percentage of zeros",
+     ylab = "Frequency")
+axis(2)
+axis(1, at = c(0.05, .10, 0.15, 0.20, 0.25),
+     labels = c("5%", "10%", "15%", "20%", "25%"))     
+points(x = sum(Owls$NCalls == 0) / N, y = 0, pch = 16, cex = 3, col = 2)
+```
+
+They also mention the use of cross-validation and counterfactuals ("what ifs").
+
+I found that simulation could have been introduced earlier: simulating specific pattern in the data to make sure our understanding of the model is accurate (a la statistical rethinking).
