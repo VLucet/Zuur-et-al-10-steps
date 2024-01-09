@@ -57,7 +57,7 @@ In the meantime, let's download the files one by one.
 base_dryad_url <- "https://datadryad.org/stash/downloads/file_stream/"
 file_url_list <- paste0(base_dryad_url, c(37547:37550))
 files_names <- c("monkeys.txt", "owls.txt", "oystercatchers.txt", "zurr_iena_2016.R")
-files_paths_list <- paste0(c(rep("data/", 3), "scripts/"), files_names)
+files_paths_list <- c(here("data", "zuur_ieno_2016", files_names[1:3]), here("scripts", files_names[4]))
 
 # If the file exists already, do not download it
 ret <- mapply(\(file_url, file_path) {
@@ -68,7 +68,7 @@ ret <- mapply(\(file_url, file_path) {
 You can take a look at the code in the scripts directory, we will be copying code from there into this document. Now, let's load the data properly before we get anything else done.
 
 ```{r}
-Owls <- read.table(here("data", "owls.txt"), 
+Owls <- read.table(here("data","zuur_ieno_2016", "owls.txt"), 
                    header = TRUE,
                    dec = ".")
 
@@ -82,7 +82,7 @@ head(Owls)
 ```
 
 ```{r}
-OC <- read.table(here("data", "oystercatchers.txt"), 
+OC <- read.table(here("data", "zuur_ieno_2016", "oystercatchers.txt"), 
                  header = TRUE,
                  dec = ".")
 
@@ -93,7 +93,7 @@ head(OC)
 ```
 
 ```{r}
-Monkeys <- read.table(here("data", "monkeys.txt"), 
+Monkeys <- read.table(here("data", "zuur_ieno_2016", "monkeys.txt"), 
                       header = TRUE)
 
 # Let's look at it

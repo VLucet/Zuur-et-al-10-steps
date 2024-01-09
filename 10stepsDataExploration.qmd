@@ -12,11 +12,15 @@ In this paper, the authors first warn against "data dredging", which is when the
 
 #### Accessing data and code for reproducibility
 
-Unlike in the more recent 2016 paper, the data here is only accessible via a zip archive on the paper. We can still download the files with R.
+Let's first load the relevant packages for this analysis.
 
 ```{r}
-# download.file()
+
+# 
+library(here)
 ```
+
+Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?).
 
 ### Step 10: Formulate hypotheses, carry out experiments and data collection
 
