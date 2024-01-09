@@ -1,0 +1,789 @@
+---
+title: "Zuur & Ieno's 10 steps for regression analyses"
+---
+
+This website in a reproducible exploration of "[A protocol for conducting and presenting results of regression-type analyses](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577)" by Alain F. Zuur, and Elena N. Ieno.
+
+The 10 steps are all first presented in figure 1 of the paper:
+
+![The 10 steps of regression analyses.](https://besjournals.onlinelibrary.wiley.com/cms/asset/17c3d76c-f2e6-4e2a-a117-581a303cdaef/mee312577-fig-0001-m.png){fig-align="center"}
+
+The focus of the 10 steps on on linear modelling of the type **GLM, GLMM** etc and uses R although it generalizes to other languages.
+
+#### Accessing data and code for reproducibility
+
+The paper provides data and code on Dryad but is not set up for interactive report-style reproducibility with package versioning. To fix that, I used a quarto document with `renv` to produce this website. In order to reproduce the analysis here, you can clone [the repository](https://github.com/VLucet/ZuurIeno10steps) in [RStudio](https://happygitwithr.com/new-github-first#new-rstudio-project-via-git), install the [`renv`](https://rstudio.github.io/renv/articles/renv.html) package, run `renv::restore()` and you should be good to go for running the quarto notebook!
+
+I had to make some changes to the packages used. Let's load what we will need now. Packages `maptools` and `rgdal` are deprecated as far as I can tell, and `sp` is just not recommendable for forward compatibility in 2024.
+
+```{r, message=FALSE}
+# Necessary packages from original code
+library(lattice)  
+library(ggplot2)
+library(ggmap)
+library(lme4)
+library(mgcv)
+library(R2jags)
+library(plyr)
+
+# Recommended by the authors but outdated
+# library(maptools) => We will use other packages
+# library(sp) => We won't need it with sf
+# library(rgdal) => We won't need it with sf
+
+# Using sf
+library(sf)
+
+# Other additionnal packages to improve upon the provided code
+# We also setup for rgl plots in the webpage
+library(lubridate)
+library(gganimate)
+library(here)
+library(leaflet)
+library(equatiomatic)
+library(knitr)
+library(stargazer)
+library(sjPlot)
+library(rgl) ; knitr::knit_hooks$set(webgl = hook_webgl)
+library(htmlwidgets)
+```
+
+In order to access the data and code, we would ideally use a package like [`rdryad`](https://github.com/ropensci/rdryad) to do so, but I have been getting nowhere with it. It is probably broken as it is soon to be superseded by the [`deposits`](https://github.com/ropenscilabs/deposits) package. If I forget to update this website with the latest [`deposits` API](https://github.com/ropenscilabs/deposits/issues/41), feel free the [file an issue](https://github.com/VLucet/ZuurIeno10steps/issues).
+
+In the meantime, let's download the files one by one.
+
+```{r, message=FALSE}
+# Create the file urls and destination files names & names
+base_dryad_url <- "https://datadryad.org/stash/downloads/file_stream/"
+file_url_list <- paste0(base_dryad_url, c(37547:37550))
+files_names <- c("monkeys.txt", "owls.txt", "oystercatchers.txt", "zurr_iena_2016.R")
+files_paths_list <- paste0(c(rep("data/", 3), "scripts/"), files_names)
+
+# If the file exists already, do not download it
+ret <- mapply(\(file_url, file_path) {
+  if (!file.exists(file_path)) download.file(file_url, destfile =  file_path)
+}, file_url_list, files_paths_list)
+```
+
+You can take a look at the code in the scripts directory, we will be copying code from there into this document. Now, let's load the data properly before we get anything else done.
+
+```{r}
+Owls <- read.table(here("data", "owls.txt"), 
+                   header = TRUE,
+                   dec = ".")
+
+# SiblingNegotiation is too long....use shorter name:
+Owls$NCalls <- Owls$SiblingNegotiation
+
+# Let's look at it
+names(Owls)
+str(Owls)
+head(Owls)
+```
+
+```{r}
+OC <- read.table(here("data", "oystercatchers.txt"), 
+                 header = TRUE,
+                 dec = ".")
+
+# Let's look at it
+names(OC)
+str(OC)
+head(OC)
+```
+
+```{r}
+Monkeys <- read.table(here("data", "monkeys.txt"), 
+                      header = TRUE)
+
+# Let's look at it
+names(Monkeys)
+str(Monkeys)
+head(Monkeys)
+```
+
+### Step 1: State appropriate questions
+
+The key idea is to have the salient question of the analysis in mind at the start, and formulate them properly. The example here is a study on the "vocal behavior of barn owl siblings" with a N = 28. The hypothesis is that food availability will influence "sibling negotiation", proxied by the number of calls in the nest, sampled with microphones. Half the nests get extra food (treatment: satiated) and the other half is starved (treatment: deprived ; surprisingly no control?).
+
+The 3 covariates are *time*, *food treatment (satiated or deprived)* and *sex of parent.* The question is :
+
+-   Does the relationship between sibling negotiation and sex of the parent differ with food treatment, and does the effect of time on sibling negotiation differ with food treatment?
+
+Note that the question contains the 3 terms and expected interactions.
+
+The authors warn against breaking down the questions into smaller questions such as "Is there an effect of sex of the parent?", as "A potential problem with this approach is that the residuals of one model may show patterns when compared with the covariates not used in that model, which invalidates the model assumptions."
+
+I find this a little surprising because I was taught to build simple models before complex ones, and would naturally work with simpler single covariate models first.
+
+### Step 2: Visualize the experimental design
+
+This step is simple yet sometimes overlooked: visualize the sampling protocol and experimental design preferably with the help of a map.
+
+Below we use the `sf` package to parse the data as spatial data.
+
+```{r}
+# Parse the dataframe as a sf object with the proper projection, and reproject as
+# WGS 84 CRS (LAT / LONG)
+Owls_sf <- st_as_sf(Owls, coords = c("Xcoord", "Ycoord"))
+
+WGS84     <- st_crs("+proj=longlat +datum=WGS84")
+projSWISS <- st_crs("+init=epsg:21781")
+st_crs(Owls_sf) <- st_crs(projSWISS)
+
+Owls_sf_tmp <- st_transform(Owls_sf, WGS84)
+Owls_sf_wgs84 <- cbind(Owls_sf_tmp, st_coordinates(Owls_sf_tmp))
+
+# Let's look at it
+head(Owls_sf_wgs84)
+```
+
+The code suggests to write the points as a .kml file to open in Google Earth.
+
+```{r}
+# Write the points as kml, wich you can open in google earth
+owls_kml_file <- here("data", "Owls_wgs84.kml")
+if (!file.exists(owls_kml_file)) {
+  st_write(Owls_sf_wgs84, 
+           owls_kml_file, 
+           driver = "kml", delete_dsn = TRUE)
+}
+```
+
+The code relied `ggmap`, which makes an API request to Google maps. Of course, in 2024 we are required to use an API key for that. As an alternative I suggest `leaflet` which is more likely to work in the future and does not require to mess with API keys.
+
+```{r}
+leaflet(Owls_sf_wgs84) %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers()
+```
+
+For a more publication-oriented map with `ggmap` I would recommend using the stadiamap API.
+
+```{r}
+# I suppress the API message
+glgmap <- suppressMessages(get_stadiamap(c(6.7, 46.70, 7.2, 46.96)))
+
+p_ggmap <- ggmap(glgmap) + 
+  geom_point(aes(X, Y),
+             data = Owls_sf_wgs84,
+             size = 4) + 
+  xlab("Longitude") + ylab("Latitude") + 
+  theme(text = element_text(size = 15))
+p_ggmap
+```
+
+We can also do a simple `sf` + `ggplot` plot.
+
+```{r}
+p_simple <- ggplot(Owls_sf_wgs84) + 
+  geom_sf(size = 4) + 
+  xlab("Longitude") + ylab("Latitude") + 
+  theme_light() + theme(text = element_text(size = 15))
+p_simple
+```
+
+Finally, the code suggest another two plots that are not in the paper, but are useful. The first time is a plot of the time series.
+
+```{r, fig.height=10, fig.width=8}
+p_series <- ggplot() + 
+  xlab("Arrival time") + ylab("Number of calls") + 
+  theme(text = element_text(size = 15)) + theme_light() +
+  geom_point(data = Owls_sf_wgs84,
+             aes(x = ArrivalTime,
+                 y = NCalls,
+                 color = FoodTreatment),
+             size = 2) +
+  geom_line(data = Owls_sf_wgs84,
+            aes(x = ArrivalTime,
+                y = NCalls,
+                group = FoodTreatment,
+                color = FoodTreatment)) + 
+  facet_wrap( ~ Nest, ncol = 4)
+p_series
+```
+
+The second shows how sampling unfolds across space and time, but I find the plot a little unwieldy as it facets multiple maps.
+
+```{r, fig.height=10, fig.width=8}
+# We parse the date column as a proper date
+Owls_sf_wgs84$Date_parsed <- as_date(Owls_sf_wgs84$Date, format = "%d/%m/%y")
+
+p_ggmap_facet <- ggmap(glgmap) + 
+  geom_point(aes(X, Y),
+             data = Owls_sf_wgs84,
+             size = 4) + 
+  xlab("Longitude") + ylab("Latitude") + 
+  theme(text = element_text(size = 15)) + 
+  facet_wrap(~Date_parsed) 
+
+p_ggmap_facet
+```
+
+### Step 3: Conduct data exploration
+
+There is another even older Zurr et al. paper for the [10 steps of data exploration](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577#mee312577-bib-0040). The first figure of that paper gives you the gist of the protocol (see the other page on this website to reproduce the paper).
+
+![The 10 steps for data exploration.](https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif){fig-align="center"}
+
+We now move from owls to oystercatchers. The study related the length of clams preyed upon and the feeding behavior of oystercatchers, accross time and space. The authors describe how the design suggests a 3-way interaction term that would in practicality only be driven by a couple of data points. The following plot shows that in location A in December, there were only two observations, both showing the same value. Note that I modified the plot to add colors to those problematic points to make the visualization clearer
+
+```{r}
+# Set a color column
+OC$color_pt <- ifelse(OC$Month == "Dec" & 
+                        OC$FeedingType == "Stabbers" & 
+                        OC$FeedingPlot == "A", 
+                      "red", "grey")
+
+# Here is the code for Figure 3
+p_OC <- ggplot() + xlab("Feeding type") + ylab("Shell length (mm)") + 
+  geom_point(data = OC,
+             aes(x = FeedingType, y = ShellLength),
+             color = OC$color_pt,
+             position = position_jitter(width = .03),
+             size = 2) + 
+  facet_grid(Month ~ FeedingPlot,
+             scales = "fixed") + 
+  theme_light() +
+  theme(text = element_text(size = 15)) + 
+  theme(legend.position = "none") + 
+  theme(strip.text.y = element_text(size = 15,
+                                    colour = "black",
+                                    angle = 20),
+        strip.text.x = element_text(size = 15,
+                                    colour = "black",
+                                    angle = 0)
+  )
+p_OC
+```
+
+You should spend a good amount of time on data exploration. It will also help you identify data quality issues and encoding errors.
+
+Note that it is sometimes useful to tabulate data across levels of a given factor.
+
+```{r}
+table(OC$Month, OC$FeedingPlot, OC$FeedingType)
+```
+
+### Step 4: Identify the dependency structure in the data
+
+The authors warn that it is rare to find a dataset without dependency structures. They advise GLMM as a way to deal with pseudoreplicated data (relying on pooling as a way to properly model dependencies between, say, sampling locations etc..).
+
+We now move on to the baboon dataset. I think it is the same dataset used in Statistical Rethinking for teaching multilevel modelling. The design: the researchers are interested in understanding grooming behavior between baboons. Baboon may hold different ranks within the troop (represented as a value between 0 and 1). Some 60 baboons are sampled multiple times, for an hour at a time, its grooming behavior recorded, making the receiver of the behavior another layer of dependency. This pseudoreplication structure requires a mixed-effects model with random effects (two-way nested AND crossed). The structure looks like this:
+
+![Baboon dataset structure](https://besjournals.onlinelibrary.wiley.com/cms/asset/b2fe00b8-9877-4106-983b-2285c5dd480e/mee312577-fig-0004-m.jpg){fig-align="center"}
+
+The authors suggest to properly report the structure. Personally I love seeing, in papers, when both a graphical, a textual AND a mathematical description is given.
+
+The textual description for baboon and owl data:
+
+-   This data set consists of multiple observations of rank differences of a given baboon and receivers within a focal hour, along with multiple observations of a given receiver. We therefore applied a mixed-effects model with the random effect *focal hour* nested within the random effect *baboon* and a crossed random effect *receiver*
+
+-   We sampled each nest multiple times and therefore applied a GLMM in which *nest* is used as random intercept, as this models a dependency structure among sibling negotiation observations of the same nest
+
+### Step 5: Present the statistical model
+
+Speaking of mathematical description, this step is where the authors suggest this is given and stated clearly, under the form of an equation. Here is what it would look like for the owl data:
+
+![Equation describing the owl data model](https://besjournals.onlinelibrary.wiley.com/cms/asset/ce92caf3-66eb-460f-91d4-66962d9cf7d9/mee312577-math-0001.png){fig-align="center"}
+
+One of the key element in this is how the error structure of the data is stated clearly: here the count of calls is modelled as a Poisson distribution. It shows the log link function and how the model is clearly defined. The authors give further advice for how to explain choices of distributions.
+
+For the baboon data:
+
+![Equation describing the baboon data model](https://besjournals.onlinelibrary.wiley.com/cms/asset/a3750982-7432-4000-beb0-f17477776b03/mee312577-math-0002.png){fig-align="center"}
+
+If only all papers when to that length in describing their models (although I am definitely guilty of omitting details as well). The amazing package [`equatiomatic`](https://datalorax.github.io/equatiomatic/index.html) makes this easier.
+
+```{r}
+# Although we will look at the model formulation at the next step in greater
+# details, let's try and use it here with equationmatic
+
+M1 <- glmer(NCalls ~ FoodTreatment + ArrivalTime + SexParent +
+                     FoodTreatment : SexParent +
+                     FoodTreatment : ArrivalTime +
+                     (1 | Nest),
+            family = poisson,
+            data = Owls)
+extract_eq(M1, wrap = TRUE, terms_per_line = 1)
+```
+
+### Step 6: Fit the model
+
+The authors first remind that it is important to say what software was used to fit the model, directly in the text. They add details as to how to report a MCMC analysis. This section of the paper is not very verbose and could have been expanded to talk about how versions of packages can be very relevant to the fitted results. Also, the paper could have discussed how fitted models are stored and conserved (with rds files) and implications of all this kind of stuff for the ability of future readers to make sense of the model.
+
+One note concerning the owl dataset: in the code, the authors mention that the response variable should probably be transformed (but for some reason they do not show the process). They also mention that brood size should probably be used an offset in the model - but did not want to confuse readers of the paper with it, at the risk of confusing readers of the code by not explaining why and how the offset is needed here.
+
+Let's see the model again (note the additional code for the offset, if you want, but we won't use it for the sake of consistency with the paper).
+
+```{r}
+#For the offset we need:
+Owls$LogBroodSize <- log(Owls$BroodSize)
+
+library(lme4)
+M1 <- glmer(NCalls ~ FoodTreatment + ArrivalTime + SexParent +
+                     FoodTreatment : SexParent +
+                     FoodTreatment : ArrivalTime +
+                     #offset(LogBroodSize) +  #Feel free to include
+                     (1 | Nest),
+            family = poisson,
+            data = Owls)
+
+# Numerical results:
+summary(M1)
+```
+
+For the Bayesian baboon models, the code to run the model is given later in the script, but it is more appropriately shown here. You can skip this part if you are not familiar with Bayesian methods as this might be more confusing than anything. The authors re-use an example from the course they teach and only provide the minimal code needed to run the model which makes it difficult to get the full picture. That part of the provided code lacks the model validation section, and provide functions (which I have placed in a separate file for simplicity) about which the authors say the reader should not "bother trying to understand"...). Still, let's source those functions.
+
+```{r}
+source(here("scripts", "functions.R"))
+```
+
+One of the relevant question to the analysis, which is provided as a code comment (instead of being mentioned in step 1, as I think it should have been) is that Subordinates should prefer to groom more dominant animals earlier in the day. To look at this we need to subset the data.
+
+```{r}
+Monkeys_sub <- Monkeys[Monkeys$SubordinateGrooms == "yes",]
+```
+
+Then we prepare the model data to run with JAGS.
+
+```{r}
+# Transfor the response variable:
+N <- nrow(Monkeys_sub)
+Monkeys_sub$RD.scaled <- (Monkeys_sub$RankDifference * (N - 1) + 0.5) / N
+
+# A full explanation  of zero inflatedbeta models is provided in 
+# Zuur's Beginner's Guide to Zero-Inflated Models with R' 
+
+# For MCMC it is essential to standardize continuous covariates
+Mystd <- function(x) {(x - mean(x)) / sd(x)}
+Monkeys_sub$Time.std        <- Mystd(Monkeys_sub$Time)
+Monkeys_sub$Relatedness.std <- Mystd(Monkeys_sub$Relatedness)
+
+# JAGS coding
+# Create X matrix
+X <- model.matrix(~Time.std * Relatedness.std + Relatedness.std * GroupSize,
+                  data = Monkeys_sub)
+K <- ncol(X)
+
+# Random effects:
+reFocalGroomer  <- as.numeric(as.factor(Monkeys_sub$FocalGroomer))
+NumFocalGroomer <- length(unique(Monkeys_sub$FocalGroomer))
+
+reFocalHour  <- as.numeric(as.factor(Monkeys_sub$FocalHour))
+NumFocalHour <- length(unique(Monkeys_sub$FocalHour))
+
+reReceiver  <- as.numeric(as.factor(Monkeys_sub$Receiver))
+NumReceiver <- length(unique(Monkeys_sub$Receiver))
+
+#Put all data for JAGS in a list
+JAGS.data <- list(Y            = Monkeys_sub$RD.scaled,
+                  N            = nrow(Monkeys_sub),
+                  X            = X,
+                  K            = ncol(X),
+                  reFGroomer   = reFocalGroomer,
+                  NumFGroomer  = NumFocalGroomer,
+                  reFHour      = reFocalHour,
+                  NumFHour     = NumFocalHour,
+                  reRec        = reReceiver,
+                  NumReceiver  = NumReceiver
+)
+str(JAGS.data)
+```
+
+We then run the chains. I do not run the updates as they take too much time on my laptop, hence why the results might not be matching perfectly the reported numbers in the paper.
+
+```{r}
+# JAGS code
+jags_file_path <- here("jags", "BetaRegmm.txt")
+
+if (!file.exists(jags_file_path)) {
+  sink(jags_file_path)
+  cat("
+model{
+    #Priors regression parameters, theta
+    for (i in 1:K) { beta[i]  ~ dnorm(0, 0.0001) }
+    theta ~ dunif(0, 20)
+
+    #Priors random effects
+    for (i in 1: NumFGroomer) {a[i] ~ dnorm(0, tau.gr) }
+    for (i in 1: NumFHour)    {b[i] ~ dnorm(0, tau.fh) }
+    for (i in 1: NumReceiver) {c[i] ~ dnorm(0, tau.rc) }
+
+    #Priors for the variances of the random effects
+    tau.gr <- 1 / (sigma.gr * sigma.gr)
+    tau.fh <- 1 / (sigma.fh * sigma.fh)
+    tau.rc <- 1 / (sigma.rc * sigma.rc)
+
+    sigma.gr ~ dunif(0, 10)
+    sigma.fh ~ dunif(0, 10)
+    sigma.rc ~ dunif(0, 10)
+
+    #######################
+    #Likelihood
+    for (i in 1:N){
+      Y[i] ~ dbeta(shape1[i], shape2[i])
+      shape1[i] <- theta * pi[i]
+      shape2[i] <- theta * (1 - pi[i])
+
+      logit(pi[i]) <- eta[i] + a[reFGroomer[i]] + b[reFHour[i]] + c[reRec[i]]
+      eta[i]       <- inprod(beta[], X[i,])
+  }
+}
+", fill = TRUE)
+  sink()
+}
+
+# Set the initial values for the betas and sigma
+inits <- function() {
+  list(
+    beta  = rnorm(ncol(X), 0, 0.1),
+    theta = runif(0, 20),
+    sigma.gr = runif(0, 10),
+    sigma.fh = runif(0, 10),
+    sigma.rc = runif(0, 10)
+  )  }
+
+#Parameters to estimate
+params <- c("beta", "theta",
+            "sigma.gr", "sigma.fh", "sigma.rc")
+
+model_path <- here("jags", "J0.rds")
+
+if (!file.exists(model_path)) {
+  J0 <- jags(data = JAGS.data,
+             inits = inits,
+             parameters = params,
+             model.file = jags_file_path,
+             n.thin = 10,
+             n.chains = 3,
+             n.burnin = 4000,
+             n.iter   = 5000)
+  saveRDS(J0, model_path) 
+} else {
+  J0 <- readRDS(model_path)
+}
+
+# Fast computer:
+# J1  <- update(J0, n.iter = 10000, n.thin = 10)
+# J2  <- update(J1, n.iter = 50000, n.thin = 10)
+# out <- J2$BUGSoutput
+
+out <- J0$BUGSoutput
+str(out)
+```
+
+We process the results of the Bayesian model.
+
+```{r, fig.height=10, fig.width=8}
+# Assess chain mixing (an indication of how well the model ran)
+MyBUGSChains(out,
+             c(uNames("beta", K), "theta", "sigma.gr", "sigma.fh", "sigma.rc"))
+```
+
+### Step 7: Validate the model
+
+What is validation? "*Model validation confirms that the model complies with underlying assumptions*."
+
+Regression models have assumptions (in particular about the structure of residuals) and the fore violation of those assumptions may lead to increase bias, type 1 error rate, etc. Residuals should be plotted against all variables (and time and space dimensions if applicable) and autocorellation should be modeled if applicable.
+
+To get to the residuals and fitted values:
+
+```{r}
+E1 <- resid(M1, type = "pearson")
+F1 <- fitted(M1)
+str(E1)
+str(F1)
+```
+
+In the context of the owl data, the authors describe finding a pattern of over dispersion by calculating an over dispersion metric:
+
+```{r}
+# Get the dispersion statistic
+# (not counting random effects as parameters)
+E1 <- resid(M1, type = "pearson")
+N  <- nrow(Owls)
+p  <- length(fixef(M1)) + 1
+sum(E1^2) / (N - p)
+
+```
+
+Not in the paper, they also flag a potential issue with heterogeneity...
+
+```{r}
+plot(x = F1,
+     y = E1,
+     xlab = "Fitted values",
+     ylab = "Pearson residuals")
+abline(h = 0, lty = 2)
+```
+
+Building up to the next figure in the paper, we plot arrival time against those residuals.
+
+```{r}
+plot(x = Owls$ArrivalTime,
+     y = E1,
+     xlab = "Arrival time (h)",
+     ylab = "Pearson residuals")
+abline(h = 0, lty = 2)
+```
+
+Suspecting a non-linear structure, the authors decide to fit a GAM on the residuals. As they write in the code "If the smoother is not significant, or if it explains a small amount of variation, then there are indeed no residual patterns."
+
+```{r}
+T2 <- gam(E1 ~ s(ArrivalTime), data = Owls)
+summary(T2)
+plot(T2)
+abline(h = 0, lty = 2)
+```
+
+Now, we can reproduce the next figure in the paper. The authors used a plotting technique for the predictions which consists in creating a grid of arrival times to feed to the `predict` function. To this we add the smoother and its confidence interval, all of it using `ggplot2`.
+
+```{r}
+time_range <- range(Owls$ArrivalTime)
+MyData <- data.frame(ArrivalTime = seq(time_range[1], time_range[2], 
+                                       length = 100))
+P <- predict(T2, newdata = MyData, se = TRUE)
+MyData$mu   <- P$fit
+MyData$SeUp <- P$fit + 1.96 * P$se
+MyData$SeLo <- P$fit - 1.96 * P$se
+
+Owls$E1 <- E1
+p_M1 <- ggplot() + 
+  xlab("Arrival time  (h)") + ylab("Pearson residuals") + 
+  theme(text = element_text(size = 15)) + 
+  geom_point(data = Owls,
+             aes(x = ArrivalTime, y = E1),
+             size = 1) + 
+  geom_line(data = MyData,
+            aes(x = ArrivalTime, y = mu),
+            colour = "black") +
+  geom_ribbon(data = MyData,
+              aes(x = ArrivalTime,
+                  ymax = SeUp,
+                  ymin = SeLo ),
+              alpha = 0.2) + 
+  geom_hline(yintercept = 0)
+p_M1
+```
+
+From this exploration of the residuals, the authors conclude that we should be using a GAMM instead...
+
+A couple of notes: the authors mention in a figure caption that the smooth only explains 7% of the variation in the residuals, which as I understand it (maybe badly), is quite low. They also mention other factors that could be responsible for overdispersion: "a missing covariate, the relatively large number of zero observations (25%) or dependency within (or between) nests". The pattern with arrival time seems quite clear, and I am left convinced it should be dealt with in the model. I am not left convinced that a complex GAMM would be the first answer, however.
+
+Validation for the baboon bayesian model is not present in the code.
+
+### Step 8: Interpret and present the numerical output of the model
+
+Interpreting complex regression results in R can be complicated, especially when it comes to interaction terms and how they change intercepts and slopes. The authors suggest to report the main results in a table: "estimated parameters, standard errors, t-values, R2 and the estimated variance". For mixed effects models: report multiple variances, calculate intraclass correlation to derive the R2. For GAMs/GAMMs, make sure to report the effective df of smoothers.
+
+The authors report the controversies around reporting p-values. They say: "Their interpretation is prone to abuse, and, for most of the frequentist techniques mentioned, *P*-values are approximate at best. They must be interpreted with care, and this should be emphasized in the paper. An alternative is to present 95% confidence intervals for the regression parameters and effect size estimates and their precision ".
+
+Concerning the owl model, writing out the actual effects might help. Here I insert the next equation in the paper:
+
+![Equation expanded for the owl model](https://besjournals.onlinelibrary.wiley.com/cms/asset/75975d41-4e84-4afe-9657-9529d9952eab/mee312577-math-0003.png){fig-align="center"}
+
+The authors simply report the Fixed effects table from `summary(M1)`.
+
+```{r}
+M1_sum <- summary(M1)
+M1_table <- M1_sum$coefficients |> as.data.frame()
+print(M1_table)
+```
+
+In reports, these table came be outputted to a markdown table and nicely formatted.
+
+```{r}
+kable(M1_table)
+```
+
+Alternatively, one can use a package designed to deal with tables specifically, such as `gtable` (for structured tables with tidy data), or more appropriately here, `stargazer` (to compare models) or `sjPlot`.
+
+```{r, results='asis'}
+# Here we use the html for this report, and note the results='asis' code chunck 
+# options, but stargazer has other output format options
+stargazer(M1, type = "html", flip = TRUE)
+```
+
+```{r}
+tab_model(M1)
+```
+
+The values in the last equation are produced by expanding the correct values from the table into the formula. Note that here, "the overdispersion and nonlinear pattern in the Pearson residuals invalidate the results".
+
+For MCMC models, the same is applicable. Here is what the equation would look like for a model like the baboon data example (for large groups, as for small groups there need to be a correction, see the paper for the resulting equation):
+
+![Expanded equation for baboon model](https://besjournals.onlinelibrary.wiley.com/cms/asset/327ce41c-700f-4b62-b5e4-02b0f69494aa/mee312577-math-0004.png){fig-align="center"}
+
+The table for this model is treated similarly with kable.
+
+```{r}
+# present output
+OUT1 <- MyBUGSOutput(out,
+                     c(uNames("beta", K), "sigma.gr", "sigma.fh", "sigma.rc", "theta"))
+rownames(OUT1)[1:K] <- colnames(X)
+print(OUT1, digits = 5)
+```
+
+```{r}
+kable(OUT1)
+```
+
+I am not aware of any packages for pretty printing of JAGS model output tables.
+
+### Step 9: Create a visual representation of the model
+
+This is usually the main "results" figure: a visual plotting of the model in action. One should strive to avoid plotting redundant information while still showing the fitted values and the model variance.
+
+Again, the authors remind owl GLMM is "overdispersed, and the residuals contained nonlinear patterns", which could be improved with a GAMM with nonlinear time arrival effect (then, why not show that, instead of reminding us many times in the paper and the code how bad the analysis actually is). But let's imagine the GLMM was sufficient and reproduce the next figure in the pap?er. The comments in the original code are quite useful here. I just modified the code to remove a warning.
+
+```{r}
+# A. Specify covariate values for predictions
+MyData <- ddply(Owls,
+                .(SexParent, FoodTreatment),
+                summarize,
+                ArrivalTime = seq(from = min(ArrivalTime),
+                                  to = max(ArrivalTime),
+                                  length = 10))
+
+# B. Create X matrix with expand.grid
+X <- model.matrix(~ FoodTreatment + ArrivalTime + SexParent +
+                    FoodTreatment:SexParent +
+                    FoodTreatment:ArrivalTime,
+                  data = MyData)
+
+# C. Calculate predicted values
+MyData$eta <- X %*% fixef(M1)
+MyData$mu  <- exp(MyData$eta)
+
+# D. Calculate standard errors (SE) for predicted values
+# SE of fitted values are given by the square root of
+# the diagonal elements of: X * cov(betas) * t(X)
+MyData$SE   <- sqrt(diag(X %*% vcov(M1) %*% t(X)))
+MyData$seup <- exp(MyData$eta + 1.96 * MyData$SE)
+MyData$selo <- exp(MyData$eta - 1.96 * MyData$SE)
+
+# E. Plot predicted values +/- 2* SE
+p_fitted <- ggplot() + 
+  xlab("Arrival time (h)") + ylab("Number of calls") +
+  geom_point(data = Owls,
+             aes(x = ArrivalTime, y = NCalls),
+             position = position_jitter(width = .01),
+             color = grey(0.2),
+             size = 1) +
+  geom_line(data = MyData,
+            aes(x = ArrivalTime,
+                y = mu)) +
+  geom_ribbon(data = MyData,
+              aes(x = ArrivalTime,
+                  ymax = seup,
+                  ymin = selo),
+              alpha = 0.5) + 
+  facet_grid(SexParent ~ FoodTreatment,
+             scales = "fixed") +
+  theme_light() + theme(text = element_text(size = 15)) + 
+  theme(legend.position = "none")
+p_fitted
+```
+
+For the baboon model, the authors recommends to plot the model fit in a way that highlights the interactions between the continuous and categorical covariate, as well as between the two continuous covariates. I prefer the paste the entire quote that justifies the 3D plot:
+
+-   The figure "shows two planes, one representing the small group and for the other representing the large group. The small group exhibited a positive effect of relatedness on rank differences early in the day and a negative effect later in the day, as well as a negative time effect for low relatedness values and a positive time effect for higher relatedness values. The large group shows a negative relatedness effect early in the day".
+
+The code was written before R 4.0 and the breaking change concerning characters no longer being read as factors when loading the data, so we need to change another couple of things to get the expected behavior as well. Let's get the predictions ready.
+
+```{r}
+#Get the realisations of the betas
+Beta.mcmc <- out$sims.list$beta
+
+# Create a grid of covariate values
+time_range <- range(Monkeys_sub$Time.std)
+relate_range <- range(Monkeys_sub$Relatedness.std)
+MyData <- 
+  expand.grid(Time.std = seq(time_range[1], time_range[2], length = 15),
+              Relatedness.std = seq(relate_range[1], relate_range[2], length = 15),
+              GroupSize = levels(as.factor(Monkeys_sub$GroupSize)))
+
+# Convert the grid into a X matrix, and calculate the fitted
+# values for each (!) MCMC iteration
+X <- model.matrix(~Time.std * Relatedness.std +
+                    Relatedness.std * GroupSize,
+                  data = MyData)
+Betas <- Beta.mcmc
+eta   <- X %*% t(Betas)
+mu    <- exp(eta) / (1 + exp(eta))
+
+L <- MyLinesStuff(mu)
+str(L) #Posterior mean, se and 95% CI for each of these covariate values
+
+#Glue the results in L to the MyData object
+MyData <- cbind(MyData,L)
+str(MyData)
+```
+
+The code to make figure 8 is not like in the paper.
+
+```{r}
+# In the paper we use a slighly different angle. Change
+# the i value, or put a loop around this code in which i
+# runs form 1 to 1000.
+i <- 70
+p_3D <- wireframe(mean ~ Time.std + Relatedness.std, 
+                  data = MyData,
+                  group = GroupSize,
+                  #zlim = c(0,1),
+                  shade = TRUE,
+                  scales = list(arrows = FALSE),
+                  drape = TRUE, 
+                  colorkey = FALSE,
+                  screen = list(z = i, x = -60 - i /5))
+print(p_3D)
+```
+
+So let's try and use a better solution. Both `rgl` and `plotly` are great for 3D plotting. Let's give `rgl` a try.
+
+```{r, webgl=TRUE}
+plot3d( 
+  y = MyData$Relatedness.std, 
+  z = MyData$mean, 
+  x = MyData$Time.std, 
+  # col = data$color, 
+  type = 's', 
+  radius = .1,
+  ylab = "Relatedness std", zlab = "Mean", xlab = "Time.std"
+)
+
+# saveWidget(rglwidget(width = 520, height = 520), 
+#            file = here("widgets", "rgl_plot.html"),
+#            libdir = "libs",
+#            selfcontained = FALSE
+# )
+```
+
+### Step 10: Simulate from the model
+
+In this section the authors simulate from the model and show that the model underestimates the amount of 0s.
+
+```{r, fig.height=6, fig.width=6}
+N <- nrow(Owls)
+gg <- simulate(M1, 10000)
+
+zeros <- vector(length = 10000)
+for (i in 1:10000) {
+  zeros[i] <- sum(gg[,i] == 0) / N
+}
+
+plot(table(zeros), 
+     xlim = c(0, 160 / N),
+     axes = FALSE,
+     xlab = "Percentage of zeros",
+     ylab = "Frequency")
+axis(2)
+axis(1, at = c(0.05, .10, 0.15, 0.20, 0.25),
+     labels = c("5%", "10%", "15%", "20%", "25%"))     
+points(x = sum(Owls$NCalls == 0) / N, y = 0, pch = 16, cex = 3, col = 2)
+```
+
+They also mention the use of cross-validation and counterfactuals ("what ifs").
+
+I found that simulation could have been introduced earlier: simulating specific pattern in the data to make sure our understanding of the model is accurate (a la statistical rethinking).

@@ -3,13 +3,15 @@ project:
   output-dir: docs
 
 website:
-  title: "Zuur & Ieno's 10 steps"
+  title: "The 10 Steps Papers Reproduced"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-
+      - href: 10stepsRegression.qmd
+        text: 10 steps for Regression Analyses
+      - href: 10stepsDataExploration.qmd
+        text: 10 steps for Data Exploration
 format:
   html:
     theme: cosmo

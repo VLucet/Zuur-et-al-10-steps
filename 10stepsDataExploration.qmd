@@ -1,0 +1,7 @@
+---
+title: "Zuur & Ieno's 10 steps for data exploration"
+---
+
+In this paper, the authors first warn against "data dredging", which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hyotheses, but that is fundamentally different from the principled workflow of this paper.
+
+Then, the authors warn against certain tests and visual tools, including normality tests. The paper is a useful read and could be the next iteration of that project.
