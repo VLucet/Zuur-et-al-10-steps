@@ -2,7 +2,7 @@
 title: "Zuur & Ieno's 10 steps for regression analyses"
 ---
 
-This website in a reproducible exploration of "[A protocol for conducting and presenting results of regression-type analyses](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577)" by Alain F. Zuur, and Elena N. Ieno.
+This page is a reproducible exploration of "[A protocol for conducting and presenting results of regression-type analyses](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.12577)" by Alain F. Zuur, and Elena N. Ieno.
 
 The 10 steps are all first presented in figure 1 of the paper:
 
