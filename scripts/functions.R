@@ -1,4 +1,12 @@
-##################################################
+## COPIED FROM ORIGINAL SCRIPT
+
+# We present three functions to view the output.
+# These functions are explained and used in
+#  -Beginner's Guide to Zero-Inflated models with R
+#   Zuur and Ieno. www.highstat.com
+#  -Beginner's Guide to GLM and GLMM with R
+#   Zuur, Hilbe, Ieno. www.highstat.com
+
 # Support files from 'Beginner's Guide to GLM and GLMM with R.
 # Zuur, Hilbe, Ieno (2013).
 MyBUGSChains <- function(xx, vars, PanelNames = NULL){
@@ -46,8 +54,6 @@ MyBUGSChains <- function(xx, vars, PanelNames = NULL){
   print(Z)
 }
 
-
-##################################################
 MyBUGSOutput <- function(Output  = Output, SelectedVar = SelectedVar, VarNames = NULL){
   xx   <- Output
   vars <- SelectedVar
@@ -78,4 +84,3 @@ uNames <- function(k,Q){
   String
 }
 # End of support code from Zuur et al.(2013).
-##############################################
