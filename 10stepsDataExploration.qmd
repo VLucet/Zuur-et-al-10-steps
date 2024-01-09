@@ -21,7 +21,7 @@ Let's first load the relevant packages for this analysis.
 
 ```
 
-Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?).
+Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick`.
 
 ### Step 10: Formulate hypotheses, carry out experiments and data collection
 
