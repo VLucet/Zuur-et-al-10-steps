@@ -1,5 +1,5 @@
 ---
-title: "Zuur & Ieno's 10 steps for data exploration"
+title: "Zuur, Ieno & Elphick's 10 steps for data exploration"
 ---
 
 This page is a reproducible exploration of "[A protocol for data exploration to avoid common statistical problems](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x)" by Alain F. Zuur, Elena N. Ieno and Chris S. Elphick.
