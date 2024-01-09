@@ -184,13 +184,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption class="figure-caption">The 10 steps for data exploration.</figcaption>
 </figure>
 </div>
-<p>In this paper, the authors first warn against “data dredging”, which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hyotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.</p>
+<p>In this paper, the authors first warn against “data dredging”, which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hypotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.</p>
 <section id="accessing-data-and-code-for-reproducibility" class="level4">
 <h4 class="anchored" data-anchor-id="accessing-data-and-code-for-reproducibility">Accessing data and code for reproducibility</h4>
-<p>Unlike in the more recent 2016 paper, the data here is only accessible via a zip archive on the paper. We can still download the files with R.</p>
+<p>Let’s first load the relevant packages for this analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># download.file()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Necessary packages from original code</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Other additionnal packages to improve upon the provided code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>Unlike in the more recent 2016 paper, the data here is only accessible via a <a href="Step 8: Are observations of the response variable independent?">zip archive on the paper webpage</a>.</p>
 </section>
 <section id="step-10-formulate-hypotheses-carry-out-experiments-and-data-collection" class="level3">
 <h3 class="anchored" data-anchor-id="step-10-formulate-hypotheses-carry-out-experiments-and-data-collection">Step 10: Formulate hypotheses, carry out experiments and data collection</h3>

@@ -14,10 +14,11 @@ In this paper, the authors first warn against "data dredging", which is when the
 
 Let's first load the relevant packages for this analysis.
 
-```{r}
+```{r, message=FALSE}
+# Necessary packages from original code
 
-# 
-library(here)
+# Other additionnal packages to improve upon the provided code
+
 ```
 
 Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?).
