@@ -30,7 +30,7 @@ Again, the authors provide custom functions that need to be sourced. Like in the
 source(here("data", "zuur_ieno_elphick_2010", "HighstatLib.r"))
 ```
 
-### Step 10: Formulate hypotheses, carry out experiments and data collection
+### Step 1: Formulate hypotheses, carry out experiments and data collection
 
 See the other page on this website for an example in the case of regression analyses.
 
