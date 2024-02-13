@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.4.549">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -79,7 +79,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -88,6 +94,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -102,9 +109,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">The 10 Steps Papers Reproduced</span>
     </a>
@@ -116,21 +123,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html" rel="" target="">
- <span class="menu-text">Home</span></a>
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./10stepsRegression.html" rel="" target="">
- <span class="menu-text">10 steps for Regression Analyses</span></a>
+    <a class="nav-link" href="./10stepsRegression.html"> 
+<span class="menu-text">10 steps for Regression Analyses</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./10stepsDataExploration.html" rel="" target="" aria-current="page">
- <span class="menu-text">10 steps for Data Exploration</span></a>
+    <a class="nav-link active" href="./10stepsDataExploration.html" aria-current="page"> 
+<span class="menu-text">10 steps for Data Exploration</span></a>
   </li>  
 </ul>
-            <div class="quarto-navbar-tools ms-auto">
-</div>
           </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -143,16 +150,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#step-1-formulate-hypotheses-carry-out-experiments-and-data-collection" id="toc-step-1-formulate-hypotheses-carry-out-experiments-and-data-collection" class="nav-link active" data-scroll-target="#step-1-formulate-hypotheses-carry-out-experiments-and-data-collection">Step 1: Formulate hypotheses, carry out experiments and data collection</a></li>
-  <li><a href="#step-2-are-there-outliers-in-y-and-x" id="toc-step-2-are-there-outliers-in-y-and-x" class="nav-link" data-scroll-target="#step-2-are-there-outliers-in-y-and-x">Step 2: Are there outliers in Y and X?</a></li>
-  <li><a href="#step-3-do-we-have-homogeneity-of-variance" id="toc-step-3-do-we-have-homogeneity-of-variance" class="nav-link" data-scroll-target="#step-3-do-we-have-homogeneity-of-variance">Step 3: Do we have homogeneity of variance?</a></li>
-  <li><a href="#step-4-are-the-data-normally-distributed" id="toc-step-4-are-the-data-normally-distributed" class="nav-link" data-scroll-target="#step-4-are-the-data-normally-distributed">Step 4: Are the data normally distributed?</a></li>
-  <li><a href="#step-5-are-there-lots-of-zeros-in-the-data" id="toc-step-5-are-there-lots-of-zeros-in-the-data" class="nav-link" data-scroll-target="#step-5-are-there-lots-of-zeros-in-the-data">Step 5: Are there lots of zeros in the data?</a></li>
-  <li><a href="#step-6-is-there-collinearity-among-the-covariates" id="toc-step-6-is-there-collinearity-among-the-covariates" class="nav-link" data-scroll-target="#step-6-is-there-collinearity-among-the-covariates">Step 6: Is there collinearity among the covariates?</a></li>
-  <li><a href="#step-7-what-are-the-relationships-between-y-and-x-variables" id="toc-step-7-what-are-the-relationships-between-y-and-x-variables" class="nav-link" data-scroll-target="#step-7-what-are-the-relationships-between-y-and-x-variables">Step 7: What are the relationships between Y and X variables?</a></li>
-  <li><a href="#step-8-should-we-consider-interactions" id="toc-step-8-should-we-consider-interactions" class="nav-link" data-scroll-target="#step-8-should-we-consider-interactions">Step 8: Should we consider interactions?</a></li>
-  <li><a href="#step-9-are-observations-of-the-response-variable-independent" id="toc-step-9-are-observations-of-the-response-variable-independent" class="nav-link" data-scroll-target="#step-9-are-observations-of-the-response-variable-independent">Step 9: Are observations of the response variable independent?</a></li>
-  <li><a href="#step-10-apply-statistical-model" id="toc-step-10-apply-statistical-model" class="nav-link" data-scroll-target="#step-10-apply-statistical-model">Step 10: Apply statistical model</a></li>
+  <li><a href="#step-1-formulate-hypotheses-carry-out-experiments-and-data-collection" id="toc-step-1-formulate-hypotheses-carry-out-experiments-and-data-collection" class="nav-link active" data-scroll-target="#step-1-formulate-hypotheses-carry-out-experiments-and-data-collection"><em>Step 1: Formulate hypotheses, carry out experiments and data collection</em></a></li>
+  <li><a href="#step-2-are-there-outliers-in-y-and-x" id="toc-step-2-are-there-outliers-in-y-and-x" class="nav-link" data-scroll-target="#step-2-are-there-outliers-in-y-and-x"><em>Step 2: Are there outliers in Y and X?</em></a></li>
+  <li><a href="#step-3-do-we-have-homogeneity-of-variance" id="toc-step-3-do-we-have-homogeneity-of-variance" class="nav-link" data-scroll-target="#step-3-do-we-have-homogeneity-of-variance"><em>Step 3: Do we have homogeneity of variance?</em></a></li>
+  <li><a href="#step-4-are-the-data-normally-distributed" id="toc-step-4-are-the-data-normally-distributed" class="nav-link" data-scroll-target="#step-4-are-the-data-normally-distributed"><em>Step 4: Are the data normally distributed?</em></a></li>
+  <li><a href="#step-5-are-there-lots-of-zeros-in-the-data" id="toc-step-5-are-there-lots-of-zeros-in-the-data" class="nav-link" data-scroll-target="#step-5-are-there-lots-of-zeros-in-the-data"><em>Step 5: Are there lots of zeros in the data?</em></a></li>
+  <li><a href="#step-6-is-there-collinearity-among-the-covariates" id="toc-step-6-is-there-collinearity-among-the-covariates" class="nav-link" data-scroll-target="#step-6-is-there-collinearity-among-the-covariates"><em>Step 6: Is there collinearity among the covariates?</em></a></li>
+  <li><a href="#step-7-what-are-the-relationships-between-y-and-x-variables" id="toc-step-7-what-are-the-relationships-between-y-and-x-variables" class="nav-link" data-scroll-target="#step-7-what-are-the-relationships-between-y-and-x-variables"><em>Step 7: What are the relationships between Y and X variables?</em></a></li>
+  <li><a href="#step-8-should-we-consider-interactions" id="toc-step-8-should-we-consider-interactions" class="nav-link" data-scroll-target="#step-8-should-we-consider-interactions"><em>Step 8: Should we consider interactions?</em></a></li>
+  <li><a href="#step-9-are-observations-of-the-response-variable-independent" id="toc-step-9-are-observations-of-the-response-variable-independent" class="nav-link" data-scroll-target="#step-9-are-observations-of-the-response-variable-independent"><em>Step 9: Are observations of the response variable independent?</em></a></li>
+  <li><a href="#step-10-apply-statistical-model" id="toc-step-10-apply-statistical-model" class="nav-link" data-scroll-target="#step-10-apply-statistical-model"><em>Step 10: Apply statistical model</em></a></li>
   </ul>
 </nav>
     </div>
@@ -174,64 +181,1221 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
   
 
+
 </header>
 
-<p>This page is a reproducible exploration of “<a href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x">A protocol for data exploration to avoid common statistical problems</a>” by Alain F. Zuur, Elena N. Ieno and Chris S. Elphick.</p>
-<p>The 10 steps are all first presented in figure 1 of the paper:</p>
+
+<p><em>This page is a reproducible exploration of “<a href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x">A protocol for data exploration to avoid common statistical problems</a>” by Alain F. Zuur, Elena N. Ieno and Chris S. Elphick.</em></p>
+<p><em>The 10 steps are all first presented in figure 1 of the paper:</em></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">The 10 steps for data exploration.</figcaption>
+<p><img src="https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+<figcaption><em>The 10 steps for data exploration.</em></figcaption>
 </figure>
 </div>
-<p>In this paper, the authors first warn against “data dredging”, which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hypotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.</p>
+<p><em>In this paper, the authors first warn against “data dredging”, which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hypotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.</em></p>
 <section id="accessing-data-and-code-for-reproducibility" class="level4">
-<h4 class="anchored" data-anchor-id="accessing-data-and-code-for-reproducibility">Accessing data and code for reproducibility</h4>
-<p>Let’s first load the relevant packages for this analysis.</p>
+<h4 class="anchored" data-anchor-id="accessing-data-and-code-for-reproducibility"><em>Accessing data and code for reproducibility</em></h4>
+<p><em>Let’s first load the relevant packages for this analysis.</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Necessary packages from original code</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Other additionnal packages to improve upon the provided code</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Unlike in the more recent 2016 paper, the data here is only accessible via a <a href="Step 8: Are observations of the response variable independent?">zip archive on the paper webpage</a>. Download the archive to <code>data/archive</code> and extract it to <code>data/zuur_ieno_elphick_2010</code>.</p>
-<p>Again, the authors provide custom functions that need to be sourced. Like in the 2016 paper, they suggest about that code that “It is perhaps better not to try and understand what it all does”…</p>
+<p><em>Unlike in the more recent 2016 paper, the data here is only accessible via a <a href="Step 8: Are observations of the response variable independent?">zip archive on the paper webpage</a>. Download the archive to <code>data/archive</code> and extract it to <code>data/zuur_ieno_elphick_2010</code>.</em></p>
+<p><em>Again, the authors provide custom functions that need to be sourced. Like in the 2016 paper, they suggest about that code that “It is perhaps better not to try and understand what it all does”…</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"zuur_ieno_elphick_2010"</span>, <span class="st">"HighstatLib.r"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><em>Let’s also load the datasets while we are at it.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Sparrows <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"zuur_ieno_elphick_2010"</span>, <span class="st">"SparrowsElphick.txt"</span>), <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Godwits <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"zuur_ieno_elphick_2010"</span>, <span class="st">"Godwits.txt"</span>), <span class="at">header =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>RiceField <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"zuur_ieno_elphick_2010"</span>, <span class="st">"ElphickBirdData.txt"</span>), <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Sparrows2 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"zuur_ieno_elphick_2010"</span>, <span class="st">"VegSamplesV1.txt"</span>), <span class="at">header =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Waders <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="at">file =</span> <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"zuur_ieno_elphick_2010"</span>, <span class="st">"wader.txt"</span>), <span class="at">header =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="step-1-formulate-hypotheses-carry-out-experiments-and-data-collection" class="level3">
-<h3 class="anchored" data-anchor-id="step-1-formulate-hypotheses-carry-out-experiments-and-data-collection">Step 1: Formulate hypotheses, carry out experiments and data collection</h3>
-<p>See the other page on this website for an example in the case of regression analyses.</p>
+<h3 class="anchored" data-anchor-id="step-1-formulate-hypotheses-carry-out-experiments-and-data-collection"><em>Step 1: Formulate hypotheses, carry out experiments and data collection</em></h3>
+<p><em>See the other page on this website for an example in the case of regression analyses.</em></p>
 </section>
 <section id="step-2-are-there-outliers-in-y-and-x" class="level3">
-<h3 class="anchored" data-anchor-id="step-2-are-there-outliers-in-y-and-x">Step 2: Are there outliers in Y and X?</h3>
+<h3 class="anchored" data-anchor-id="step-2-are-there-outliers-in-y-and-x"><em>Step 2: Are there outliers in Y and X?</em></h3>
+<p><em>It is important to know how your modeling technique of choice handles outliers in the data. The authors suggest to plot the data as a first way to look at potential outliers. They also suggest simple Cleveland dot plots.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Sparrows) <span class="sc">+</span> </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> wingcrd)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Wing length (mm)"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(Sparrows) <span class="sc">+</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> wingcrd, <span class="at">y =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Sparrows))) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Wing length (mm)"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Order of the data"</span>) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>names_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span>  <span class="fu">c</span>(<span class="st">"wingcrd"</span>, <span class="st">"tarsus"</span>, <span class="st">"head"</span>, <span class="st">"culmen"</span>, <span class="st">"nalospi"</span>, <span class="st">"wt"</span>),</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">titles =</span> <span class="fu">c</span>(<span class="st">"wing length"</span>, <span class="st">"tarsus length"</span>, <span class="st">"head length"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                 <span class="st">"culmen length"</span>, <span class="st">"nalospi to bill tip"</span>, <span class="st">"weight"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>Sparrows <span class="sc">|&gt;</span> </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(wingcrd, tarsus, head, culmen, nalospi, wt)) <span class="sc">|&gt;</span> </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(names_df) <span class="sc">|&gt;</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Sparrows), <span class="at">each =</span> <span class="dv">6</span>))) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> titles, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Value of the variable"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Order of the data"</span>) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(name)`</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><em>The authors discuss the thorny topic of outlier removal and enjoin the reader to think of outlier not necessarily as points that seems out of the ordinary distribution of the data but as observations that would exert undue influence on the analysis. They also suggest using distributions better able to deal with outlier data, or more able metrics of distance for multivariate analysis.</em></p>
 </section>
 <section id="step-3-do-we-have-homogeneity-of-variance" class="level3">
-<h3 class="anchored" data-anchor-id="step-3-do-we-have-homogeneity-of-variance">Step 3: Do we have homogeneity of variance?</h3>
+<h3 class="anchored" data-anchor-id="step-3-do-we-have-homogeneity-of-variance"><em>Step 3: Do we have homogeneity of variance?</em></h3>
+<p><em>The authors include a small section on checking equality of variance. Small deviations are okay, but larger variations can be problematic and should be addressed if possible. The authors point out to papers with more extreme examples. In the dataset plotted below, the differences in variance are negligible according to the authors.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Godwits <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">ifelse</span>(SEX <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"Not"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                      <span class="fu">ifelse</span>(SEX <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Female"</span>, <span class="st">"Male"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">period =</span> <span class="fu">ifelse</span>(PERIOD <span class="sc">==</span> <span class="dv">0</span>, <span class="st">"Summer"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">ifelse</span>(PERIOD <span class="sc">==</span> <span class="dv">1</span>, <span class="st">"Pre-migration"</span>, <span class="st">"Winter"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sex <span class="sc">!=</span> <span class="st">"Not"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> mgconsumed, <span class="at">x =</span> period)) <span class="sc">+</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> sex, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Migration period"</span>, <span class="at">y =</span> <span class="st">"Intake rate"</span>) <span class="sc">+</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="step-4-are-the-data-normally-distributed" class="level3">
-<h3 class="anchored" data-anchor-id="step-4-are-the-data-normally-distributed">Step 4: Are the data normally distributed?</h3>
+<h3 class="anchored" data-anchor-id="step-4-are-the-data-normally-distributed"><em>Step 4: Are the data normally distributed?</em></h3>
+<p>Different methods will make different assumptions about normality. For example in regression, the residual error is expected to be normally distributed, and in general, this assumption is more relevant for individual data point predictions than overall fit. The authors also warn against the fact that even if the data is properly distributed, others issues such as skewness can creep up, like in the figure below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>months_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Month =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>, <span class="dv">9</span>, <span class="dv">10</span>),</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Monthlabel =</span> <span class="fu">c</span>(<span class="st">"May"</span>, <span class="st">"June"</span>, <span class="st">"July"</span>, <span class="st">"August"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Sept."</span>, <span class="st">"Oct."</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>Sparrows_mod <span class="ot">&lt;-</span> Sparrows <span class="sc">|&gt;</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(months_df) <span class="sc">|&gt;</span> </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Month <span class="sc">%in%</span> <span class="dv">6</span><span class="sc">:</span><span class="dv">8</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>Sparrows_mod <span class="sc">|&gt;</span> </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> wt)) <span class="sc">+</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Weight (g)"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Sparrows_mod <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> wt)) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Weight (g)"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_grid</span>(<span class="at">rows =</span> <span class="st">"Monthlabel"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="576"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="step-5-are-there-lots-of-zeros-in-the-data" class="level3">
-<h3 class="anchored" data-anchor-id="step-5-are-there-lots-of-zeros-in-the-data">Step 5: Are there lots of zeros in the data?</h3>
+<h3 class="anchored" data-anchor-id="step-5-are-there-lots-of-zeros-in-the-data"><em>Step 5: Are there lots of zeros in the data?</em></h3>
+<p>The authors suggest considering the prevalence of zeroes in the dataset and what it means for the method that is best to use. In regression models, that might mean using zero inflated models and for multivariate methods it means considering what true zeroes are and think more clearly about joint absences.</p>
+<p>The plot belows shows the prevalence of zeroes in a dataset (718 of 2035 observations equal zero).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>RiceField <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bird_var =</span> <span class="fu">round</span>(AREA <span class="sc">*</span> AQBIRDS)) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> bird_var)) <span class="sc">+</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Observed values"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the same dataset, the amount of co-absences is high. The figure is difficult to update to ggplot2 so I kept it in base R. Unfortunately the code provided by the authors fail to reproduce the figure correctly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Figure 8</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">#These are all the species</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>AllS <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">"TUSW"</span>,     <span class="st">"GWFG"</span>,     <span class="st">"WHGO"</span>,     <span class="st">"CAGO"</span>,     <span class="st">"MALL"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">"GADW"</span>,     <span class="st">"GWTE"</span>,     <span class="st">"CITE"</span>,     <span class="st">"UNTE"</span>,     <span class="st">"AMWI"</span>,     <span class="st">"NOPI"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">"NOSH"</span>,     <span class="st">"RIDU"</span>,     <span class="st">"CANV"</span>,     <span class="st">"BUFF"</span>,     <span class="st">"WODU"</span>,     <span class="st">"RUDU"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">"EUWI"</span>,     <span class="st">"UNDU"</span>,     <span class="st">"PBGB"</span>,     <span class="st">"SORA"</span>,     <span class="st">"COOT"</span>,     <span class="st">"COMO"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="st">"AMBI"</span>,     <span class="st">"BCNH"</span>,     <span class="st">"GBHE"</span>,     <span class="st">"SNEG"</span>,     <span class="st">"GREG"</span>,     <span class="st">"WFIB"</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="st">"SACR"</span>,     <span class="st">"AMAV"</span>,     <span class="st">"BNST"</span>,     <span class="st">"BBPL"</span>,     <span class="st">"KILL"</span>,     <span class="st">"LBCU"</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="st">"GRYE"</span>,     <span class="st">"LEYE"</span>,     <span class="st">"LBDO"</span>,     <span class="st">"SNIP"</span>,     <span class="st">"DUNL"</span>,     <span class="st">"WESA"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="st">"LESA"</span>,     <span class="st">"PEEP"</span>,     <span class="st">"RUFF"</span>,     <span class="st">"UNSH"</span>,     <span class="st">"RBGU"</span>,     <span class="st">"HEGU"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="st">"CAGU"</span>,     <span class="st">"GUSP"</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Determine species richness</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>Richness <span class="ot">&lt;-</span> <span class="fu">colSums</span>(RiceField[,AllS] <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co">#Remove all covariates</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>Birds  <span class="ot">&lt;-</span> RiceField[,AllS]</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="co">#To reduce the of variables in the figure, we only used the</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="co">#20 species that occured at more than 40 sites.</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="co">#As a result, N = 20. Else it becomes a mess.</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>Birds2 <span class="ot">&lt;-</span> Birds[, Richness <span class="sc">&gt;</span> <span class="dv">40</span>]</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>N <span class="ot">&lt;-</span> <span class="fu">ncol</span>(Birds2)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>AllNames <span class="ot">&lt;-</span> <span class="fu">names</span>(Birds2)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="at">nrow =</span> N, <span class="at">ncol =</span> N)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N){</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>N){</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    A[i,j] <span class="ot">&lt;-</span> <span class="fu">sum</span>(RiceField[,AllS[i]]<span class="sc">==</span><span class="dv">0</span>  <span class="sc">&amp;</span> RiceField[,AllS[j]]<span class="sc">==</span><span class="dv">0</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    }}</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>A1 <span class="ot">&lt;-</span> A<span class="sc">/</span><span class="dv">2035</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="co"># print(A1, digits = 2)</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(A1) <span class="ot">&lt;-</span> AllNames</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(A1) <span class="ot">&lt;-</span> AllNames</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>panel.corrgram<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y, z, subscripts, <span class="at">at =</span> <span class="fu">pretty</span>(z), <span class="at">scale =</span> <span class="fl">0.8</span>, ...)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">require</span>(<span class="st">"grid"</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(x)[subscripts]</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>    y <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(y)[subscripts]</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>    z <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(z)[subscripts]</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    zcol <span class="ot">&lt;-</span> <span class="fu">level.colors</span>(z, <span class="at">at =</span> at, ...)</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq</span>(<span class="at">along =</span> z))</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>        lims <span class="ot">&lt;-</span> <span class="fu">range</span>(<span class="dv">0</span>, z[i])</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>        tval <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> base<span class="sc">::</span>pi <span class="sc">*</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>            <span class="fu">seq</span>(<span class="at">from =</span> lims[<span class="dv">1</span>], <span class="at">to =</span> lims[<span class="dv">2</span>], <span class="at">by =</span> <span class="fl">0.01</span>)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grid.polygon</span>(<span class="at">x =</span> x[i] <span class="sc">+</span> .<span class="dv">5</span> <span class="sc">*</span> scale <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">sin</span>(tval)),</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>                     <span class="at">y =</span> y[i] <span class="sc">+</span> .<span class="dv">5</span> <span class="sc">*</span> scale <span class="sc">*</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">cos</span>(tval)),</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>                     <span class="at">default.units =</span> <span class="st">"native"</span>,</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>                     <span class="at">gp =</span> <span class="fu">gpar</span>(<span class="at">fill =</span> zcol[i]))</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>        <span class="fu">grid.circle</span>(<span class="at">x =</span> x[i], <span class="at">y =</span> y[i], <span class="at">r =</span> .<span class="dv">5</span> <span class="sc">*</span> scale,</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>                    <span class="at">default.units =</span> <span class="st">"native"</span>)</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="fu">levelplot</span>(A1,<span class="at">xlab=</span><span class="cn">NULL</span>,<span class="at">ylab=</span><span class="cn">NULL</span>,</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>    <span class="at">at=</span><span class="fu">do.breaks</span>(<span class="fu">c</span>(<span class="fl">0.5</span>,<span class="fl">1.01</span>),<span class="dv">101</span>),</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel=</span>panel.corrgram<span class="fl">.2</span>,</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>    <span class="at">scales=</span><span class="fu">list</span>(<span class="at">x=</span><span class="fu">list</span>(<span class="at">rot=</span><span class="dv">90</span>)),</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>    <span class="at">colorkey=</span><span class="fu">list</span>(<span class="at">space=</span><span class="st">"top"</span>),</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.regions=</span><span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"white"</span>,<span class="st">"blue"</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Grey colours</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># levelplot(A1,xlab=NULL,ylab=NULL,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     at=do.breaks(c(0.5,1.01),101),</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     panel=panel.corrgram.2,</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     scales=list(x=list(rot=90)),</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     colorkey=list(space="top"),</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     col.regions=colorRampPalette(c(grey(0.8),grey(0.5),grey(0.2))))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="step-6-is-there-collinearity-among-the-covariates" class="level3">
-<h3 class="anchored" data-anchor-id="step-6-is-there-collinearity-among-the-covariates">Step 6: Is there collinearity among the covariates?</h3>
+<h3 class="anchored" data-anchor-id="step-6-is-there-collinearity-among-the-covariates"><em>Step 6: Is there collinearity among the covariates?</em></h3>
+<p>I’ve read elsewhere, namely in statistiscal rethinking and <a href="file:///home/vlucet/Downloads/CollinearityIsntADiseaseThatNeedsCuring_ms.pdf">here</a>, that multicolinearity is rarely dealt with in a causal thinking kind of way. Here the authors show an example of a “causal salad” of parameters, where model selection turns into dropping non colinear, then non significant variables ; this certainly supports McElreath’s musings here. From what I gather, dropping colinear variables probably only makes sense if it also makes sense in the context of your causal model.</p>
+<p>To be returned to when I’ve understood more about all this.</p>
 </section>
 <section id="step-7-what-are-the-relationships-between-y-and-x-variables" class="level3">
-<h3 class="anchored" data-anchor-id="step-7-what-are-the-relationships-between-y-and-x-variables">Step 7: What are the relationships between Y and X variables?</h3>
+<h3 class="anchored" data-anchor-id="step-7-what-are-the-relationships-between-y-and-x-variables"><em>Step 7: What are the relationships between Y and X variables?</em></h3>
+<p>This seems like another example of histomancy (again, re: rethinking): trying to divine a modelling approach from plotting variables against each other.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>Z<span class="ot">&lt;-</span>Sparrows2[,<span class="fu">c</span>(<span class="st">"Avgmaxht"</span>, <span class="st">"Avgdens"</span>, <span class="st">"ht.thatch"</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                <span class="st">"S.patens"</span>, <span class="st">"Distichlis"</span>, <span class="st">"S.alternifloraShort"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">"S.alternifloraTall"</span>, <span class="st">"Juncus"</span>, <span class="st">"Bare"</span>, <span class="st">"Other"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Phragmites"</span>, <span class="st">"Shrub"</span>, <span class="st">"Tallsedge"</span>, <span class="st">"Water"</span>)]</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">corvif</span>(Z)      <span class="co">#Part of Table 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Correlations of the variables
+
+                       Avgmaxht     Avgdens    ht.thatch    S.patens
+Avgmaxht             1.00000000 -0.22841524  0.466218046 -0.17785017
+Avgdens             -0.22841524  1.00000000  0.062575238  0.67411203
+ht.thatch            0.46621805  0.06257524  1.000000000  0.16053731
+S.patens            -0.17785017  0.67411203  0.160537307  1.00000000
+Distichlis          -0.02337749  0.13160006  0.022321660 -0.10290139
+S.alternifloraShort -0.44042742 -0.35875821 -0.401407857 -0.41441467
+S.alternifloraTall   0.60074164 -0.51803067  0.254760430 -0.55521017
+Juncus               0.17293819  0.32490496 -0.003660471  0.03727048
+Bare                -0.23941028 -0.20344863 -0.155596279 -0.05769548
+Other               -0.36157539  0.13420907 -0.194936964  0.06081853
+Phragmites           0.38995648 -0.06910767  0.330766492  0.08310766
+Shrub               -0.07595686 -0.19996137 -0.141009710 -0.16031227
+Tallsedge            0.28552986 -0.07218760 -0.066039061  0.07970131
+Water               -0.25038911 -0.12840907 -0.120468982 -0.17287729
+                     Distichlis S.alternifloraShort S.alternifloraTall
+Avgmaxht            -0.02337749         -0.44042742        0.600741637
+Avgdens              0.13160006         -0.35875821       -0.518030668
+ht.thatch            0.02232166         -0.40140786        0.254760430
+S.patens            -0.10290139         -0.41441467       -0.555210170
+Distichlis           1.00000000         -0.17327011       -0.219076843
+S.alternifloraShort -0.17327011          1.00000000       -0.156590051
+S.alternifloraTall  -0.21907684         -0.15659005        1.000000000
+Juncus               0.04757495         -0.31812489       -0.231319555
+Bare                -0.24631400         -0.03848335       -0.012422149
+Other               -0.12816334          0.08430546       -0.201525783
+Phragmites           0.08813589         -0.32519571        0.027006156
+Shrub                0.21464963          0.16155126       -0.173082116
+Tallsedge           -0.09316033         -0.15043833       -0.050009373
+Water               -0.21243584          0.06676282        0.002440565
+                          Juncus        Bare       Other  Phragmites
+Avgmaxht             0.172938189 -0.23941028 -0.36157539  0.38995648
+Avgdens              0.324904964 -0.20344863  0.13420907 -0.06910767
+ht.thatch           -0.003660471 -0.15559628 -0.19493696  0.33076649
+S.patens             0.037270482 -0.05769548  0.06081853  0.08310766
+Distichlis           0.047574949 -0.24631400 -0.12816334  0.08813589
+S.alternifloraShort -0.318124889 -0.03848335  0.08430546 -0.32519571
+S.alternifloraTall  -0.231319555 -0.01242215 -0.20152578  0.02700616
+Juncus               1.000000000 -0.14345423 -0.11858986  0.08711016
+Bare                -0.143454233  1.00000000  0.18374555 -0.05895322
+Other               -0.118589860  0.18374555  1.00000000 -0.12488041
+Phragmites           0.087110160 -0.05895322 -0.12488041  1.00000000
+Shrub                0.045112426 -0.09935402  0.02376765  0.09161061
+Tallsedge           -0.070738224  0.14131312  0.26940954  0.09853599
+Water               -0.124503346  0.12718566 -0.07270756 -0.11213772
+                          Shrub   Tallsedge        Water
+Avgmaxht            -0.07595686  0.28552986 -0.250389111
+Avgdens             -0.19996137 -0.07218760 -0.128409073
+ht.thatch           -0.14100971 -0.06603906 -0.120468982
+S.patens            -0.16031227  0.07970131 -0.172877290
+Distichlis           0.21464963 -0.09316033 -0.212435845
+S.alternifloraShort  0.16155126 -0.15043833  0.066762825
+S.alternifloraTall  -0.17308212 -0.05000937  0.002440565
+Juncus               0.04511243 -0.07073822 -0.124503346
+Bare                -0.09935402  0.14131312  0.127185661
+Other                0.02376765  0.26940954 -0.072707562
+Phragmites           0.09161061  0.09853599 -0.112137724
+Shrub                1.00000000 -0.04012283 -0.098725195
+Tallsedge           -0.04012283  1.00000000 -0.059059880
+Water               -0.09872519 -0.05905988  1.000000000
+
+
+Variance inflation factors</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.lm(object, ...): essentially perfect fit: summary may be
+unreliable</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                          GVIF
+Avgmaxht              6.120018
+Avgdens               3.206401
+ht.thatch             1.671224
+S.patens            159.350658
+Distichlis           53.754540
+S.alternifloraShort 121.463782
+S.alternifloraTall  159.382860
+Juncus               44.995377
+Bare                 12.058665
+Other                 5.817015
+Phragmites            3.749027
+Shrub                 2.781804
+Tallsedge             4.409398
+Water                17.067777</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Run linear regression</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>M1<span class="ot">&lt;-</span><span class="fu">lm</span>(Banded<span class="sc">~</span>Avgmaxht <span class="sc">+</span> Avgdens <span class="sc">+</span> ht.thatch <span class="sc">+</span> S.patens <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>              Distichlis <span class="sc">+</span> S.alternifloraShort <span class="sc">+</span> S.alternifloraTall <span class="sc">+</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>              Juncus <span class="sc">+</span> Bare <span class="sc">+</span> Other <span class="sc">+</span> Phragmites <span class="sc">+</span> Shrub <span class="sc">+</span> Tallsedge <span class="sc">+</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>               Water, <span class="at">data =</span> Sparrows2)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(M1)    <span class="co">#Part of Table 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Banded ~ Avgmaxht + Avgdens + ht.thatch + S.patens + 
+    Distichlis + S.alternifloraShort + S.alternifloraTall + Juncus + 
+    Bare + Other + Phragmites + Shrub + Tallsedge + Water, data = Sparrows2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-19.142  -5.431   1.011   5.240  18.634 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)         -1.612e+02  8.780e+01  -1.836   0.0730 .
+Avgmaxht             4.195e-01  3.548e-01   1.183   0.2432  
+Avgdens              6.158e-02  1.719e-01   0.358   0.7219  
+ht.thatch            8.427e-04  6.241e-01   0.001   0.9989  
+S.patens             1.626e+00  8.562e-01   1.899   0.0640 .
+Distichlis           1.703e+00  8.558e-01   1.990   0.0527 .
+S.alternifloraShort  1.668e+00  8.462e-01   1.971   0.0549 .
+S.alternifloraTall   1.449e+00  8.521e-01   1.700   0.0960 .
+Juncus               2.009e+00  8.354e-01   2.405   0.0203 *
+Bare                 1.620e+00  8.615e-01   1.880   0.0666 .
+Other                1.800e+00  9.807e-01   1.836   0.0730 .
+Phragmites           1.851e+00  1.003e+00   1.846   0.0715 .
+Shrub                6.300e-02  1.248e+00   0.050   0.9600  
+Tallsedge            1.471e+00  1.172e+00   1.255   0.2160  
+Water                2.092e+00  1.070e+00   1.955   0.0568 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 10.45 on 45 degrees of freedom
+Multiple R-squared:  0.393, Adjusted R-squared:  0.2041 
+F-statistic: 2.081 on 14 and 45 DF,  p-value: 0.03214</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Chop out covariates</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Z<span class="ot">&lt;-</span>Sparrows2[,<span class="fu">c</span>(<span class="st">"ht.thatch"</span>, <span class="st">"S.patens"</span>, <span class="st">"Distichlis"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                <span class="st">"S.alternifloraShort"</span>, <span class="st">"Juncus"</span>, <span class="st">"Bare"</span>, <span class="st">"Other"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Phragmites"</span>, <span class="st">"Shrub"</span>, <span class="st">"Tallsedge"</span>, <span class="st">"Water"</span>)]</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">corvif</span>(Z)      <span class="co">#Part of Table 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Correlations of the variables
+
+                       ht.thatch    S.patens  Distichlis S.alternifloraShort
+ht.thatch            1.000000000  0.16053731  0.02232166         -0.40140786
+S.patens             0.160537307  1.00000000 -0.10290139         -0.41441467
+Distichlis           0.022321660 -0.10290139  1.00000000         -0.17327011
+S.alternifloraShort -0.401407857 -0.41441467 -0.17327011          1.00000000
+Juncus              -0.003660471  0.03727048  0.04757495         -0.31812489
+Bare                -0.155596279 -0.05769548 -0.24631400         -0.03848335
+Other               -0.194936964  0.06081853 -0.12816334          0.08430546
+Phragmites           0.330766492  0.08310766  0.08813589         -0.32519571
+Shrub               -0.141009710 -0.16031227  0.21464963          0.16155126
+Tallsedge           -0.066039061  0.07970131 -0.09316033         -0.15043833
+Water               -0.120468982 -0.17287729 -0.21243584          0.06676282
+                          Juncus        Bare       Other  Phragmites
+ht.thatch           -0.003660471 -0.15559628 -0.19493696  0.33076649
+S.patens             0.037270482 -0.05769548  0.06081853  0.08310766
+Distichlis           0.047574949 -0.24631400 -0.12816334  0.08813589
+S.alternifloraShort -0.318124889 -0.03848335  0.08430546 -0.32519571
+Juncus               1.000000000 -0.14345423 -0.11858986  0.08711016
+Bare                -0.143454233  1.00000000  0.18374555 -0.05895322
+Other               -0.118589860  0.18374555  1.00000000 -0.12488041
+Phragmites           0.087110160 -0.05895322 -0.12488041  1.00000000
+Shrub                0.045112426 -0.09935402  0.02376765  0.09161061
+Tallsedge           -0.070738224  0.14131312  0.26940954  0.09853599
+Water               -0.124503346  0.12718566 -0.07270756 -0.11213772
+                          Shrub   Tallsedge       Water
+ht.thatch           -0.14100971 -0.06603906 -0.12046898
+S.patens            -0.16031227  0.07970131 -0.17287729
+Distichlis           0.21464963 -0.09316033 -0.21243584
+S.alternifloraShort  0.16155126 -0.15043833  0.06676282
+Juncus               0.04511243 -0.07073822 -0.12450335
+Bare                -0.09935402  0.14131312  0.12718566
+Other                0.02376765  0.26940954 -0.07270756
+Phragmites           0.09161061  0.09853599 -0.11213772
+Shrub                1.00000000 -0.04012283 -0.09872519
+Tallsedge           -0.04012283  1.00000000 -0.05905988
+Water               -0.09872519 -0.05905988  1.00000000
+
+
+Variance inflation factors</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in summary.lm(object, ...): essentially perfect fit: summary may be
+unreliable</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                        GVIF
+ht.thatch           1.483803
+S.patens            1.405993
+Distichlis          1.355857
+S.alternifloraShort 2.131070
+Juncus              1.300832
+Bare                1.231097
+Other               1.189983
+Phragmites          1.250227
+Shrub               1.156870
+Tallsedge           1.182988
+Water               1.186686</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Linear regression on subset</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Banded <span class="sc">~</span> ht.thatch <span class="sc">+</span> S.patens <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                  Distichlis <span class="sc">+</span> S.alternifloraShort <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                  Juncus <span class="sc">+</span> Bare <span class="sc">+</span> Other <span class="sc">+</span> Phragmites <span class="sc">+</span> Shrub <span class="sc">+</span> Tallsedge <span class="sc">+</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                  Water, <span class="at">data =</span> Sparrows2)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(M2)    <span class="co">#Part of Table 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Banded ~ ht.thatch + S.patens + Distichlis + S.alternifloraShort + 
+    Juncus + Bare + Other + Phragmites + Shrub + Tallsedge + 
+    Water, data = Sparrows2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-19.1448  -6.3075   0.4815   7.2374  20.0593 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          9.93887    8.38424   1.185 0.241685    
+ht.thatch            0.13163    0.59680   0.221 0.826366    
+S.patens             0.08011    0.08162   0.982 0.331243    
+Distichlis           0.15929    0.13794   1.155 0.253875    
+S.alternifloraShort  0.12045    0.11375   1.059 0.294972    
+Juncus               0.59087    0.14415   4.099 0.000159 ***
+Bare                 0.03854    0.27935   0.138 0.890862    
+Other                0.03050    0.45018   0.068 0.946264    
+Phragmites           0.65102    0.58768   1.108 0.273473    
+Shrub               -1.59457    0.81712  -1.951 0.056853 .  
+Tallsedge            0.48892    0.61606   0.794 0.431324    
+Water                0.11326    0.28638   0.395 0.694233    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 10.61 on 48 degrees of freedom
+Multiple R-squared:  0.3331,    Adjusted R-squared:  0.1802 
+F-statistic: 2.179 on 11 and 48 DF,  p-value: 0.03169</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>M2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Banded <span class="sc">~</span> Juncus <span class="sc">+</span> Shrub, <span class="at">data =</span> Sparrows2)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">drop1</span>(M2, <span class="at">test =</span> <span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Single term deletions
+
+Model:
+Banded ~ Juncus + Shrub
+       Df Sum of Sq    RSS    AIC F value   Pr(&gt;F)    
+&lt;none&gt;              5815.2 280.43                     
+Juncus  1   2015.82 7831.0 296.29 19.7589 4.11e-05 ***
+Shrub   1    341.07 6156.3 281.85  3.3431  0.07272 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># coeff(M1)</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">step</span>(M2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Start:  AIC=280.43
+Banded ~ Juncus + Shrub
+
+         Df Sum of Sq    RSS    AIC
+&lt;none&gt;                5815.2 280.43
+- Shrub   1    341.07 6156.3 281.85
+- Juncus  1   2015.82 7831.0 296.29</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Banded ~ Juncus + Shrub, data = Sparrows2)
+
+Coefficients:
+(Intercept)       Juncus        Shrub  
+    19.0220       0.5354      -1.3237  </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>M3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Banded <span class="sc">~</span> Juncus<span class="sc">+</span>Shrub, <span class="at">data =</span> Sparrows2)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(M3)    <span class="co">#Part of Table 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Banded ~ Juncus + Shrub, data = Sparrows2)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-19.022  -7.495   1.283   7.978  20.978 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  19.0220     1.5944  11.930  &lt; 2e-16 ***
+Juncus        0.5354     0.1204   4.445 4.11e-05 ***
+Shrub        -1.3237     0.7240  -1.828   0.0727 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 10.1 on 57 degrees of freedom
+Multiple R-squared:  0.2822,    Adjusted R-squared:  0.2571 
+F-statistic: 11.21 on 2 and 57 DF,  p-value: 7.858e-05</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Figure 9</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>Z <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(<span class="fu">as.matrix</span>(Sparrows2[, <span class="fu">c</span>(<span class="st">"Avgmaxht"</span>, <span class="st">"Avgdens"</span>,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"ht.thatch"</span>, <span class="st">"S.patens"</span>, <span class="st">"Distichlis"</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"S.alternifloraShort"</span>, <span class="st">"S.alternifloraTall"</span>, <span class="st">"Juncus"</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Bare"</span>, <span class="st">"Other"</span>, <span class="st">"Phragmites"</span>, <span class="st">"Shrub"</span>, <span class="st">"Tallsedge"</span>, <span class="st">"Water"</span>)]))</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Setup the data in vector format for the xyplot</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>Y10 <span class="ot">&lt;-</span> <span class="fu">rep</span>(Sparrows2<span class="sc">$</span>Banded, <span class="dv">14</span>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>MyNames <span class="ot">&lt;-</span> <span class="fu">names</span>(Sparrows2[,<span class="fu">c</span>(<span class="st">"Avgmaxht"</span>, <span class="st">"Avgdens"</span>, <span class="st">"ht.thatch"</span>,</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>                <span class="st">"S.patens"</span>, <span class="st">"Distichlis"</span>, <span class="st">"S.alternifloraShort"</span>,</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>                <span class="st">"S.alternifloraTall"</span>, <span class="st">"Juncus"</span>, <span class="st">"Bare"</span>, <span class="st">"Other"</span>,</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Phragmites"</span>, <span class="st">"Shrub"</span>, <span class="st">"Tallsedge"</span>, <span class="st">"Water"</span>)])</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>ID10 <span class="ot">&lt;-</span> <span class="fu">rep</span>(MyNames, <span class="at">each =</span> <span class="fu">length</span>(Sparrows2<span class="sc">$</span>Banded))</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>ID11 <span class="ot">&lt;-</span> <span class="fu">factor</span>(ID10, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"% Juncus gerardii"</span>,</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>               <span class="st">"% Shrub"</span>, <span class="st">"Height of thatch"</span>, <span class="st">"% Spartina patens"</span>,</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>               <span class="st">"% Distichlis"</span>, <span class="st">"% Bare ground"</span>, <span class="st">"% Other vegetation"</span>,</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>               <span class="st">"% Phragmites australis"</span>, <span class="st">"% Tall sedge"</span>, <span class="st">"% Water"</span>,</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>               <span class="st">"% Spartina alterniflora (short)"</span>,</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>               <span class="st">"% Spartina alterniflora (tall)"</span>,</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Maximum vegetation height"</span>,</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>               <span class="st">"Vegetation stem density"</span>),</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Juncus"</span>, <span class="st">"Shrub"</span>, <span class="st">"Avgmaxht"</span>, <span class="st">"S.patens"</span>,</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Distichlis"</span>, <span class="st">"Bare"</span>, <span class="st">"Other"</span>, <span class="st">"Phragmites"</span>,</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"Tallsedge"</span>, <span class="st">"Water"</span>, <span class="st">"S.alternifloraShort"</span>,</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>                          <span class="st">"S.alternifloraTall"</span>, <span class="st">"ht.thatch"</span>, <span class="st">"Avgdens"</span>))</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a><span class="fu">xyplot</span>(Y10 <span class="sc">~</span> Z <span class="sc">|</span> ID11, <span class="at">col =</span> <span class="dv">1</span>,</span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">strip =</span> <span class="cf">function</span>(<span class="at">bg=</span><span class="st">'white'</span>,...) <span class="fu">strip.default</span>(<span class="at">bg=</span><span class="st">'white'</span>,...),</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">scales =</span> <span class="fu">list</span>(<span class="at">alternating =</span> T,</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>                <span class="at">x =</span> <span class="fu">list</span>(<span class="at">relation =</span> <span class="st">"free"</span>),</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>                <span class="at">y =</span> <span class="fu">list</span>(<span class="at">relation =</span> <span class="st">"same"</span>)),</span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Covariates"</span>,</span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">par.strip.text =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="fl">0.8</span>),</span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Banded"</span>,</span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel=</span><span class="cf">function</span>(x, y, subscripts,...){</span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a>    <span class="fu">panel.grid</span>(<span class="at">h =</span><span class="sc">-</span> <span class="dv">1</span>, <span class="at">v =</span> <span class="dv">2</span>)</span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a>    <span class="fu">panel.points</span>(x, y, <span class="at">col =</span> <span class="dv">1</span>, <span class="at">pch =</span> <span class="dv">16</span>)</span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(ID10[subscripts][<span class="dv">1</span>] <span class="sc">!=</span> <span class="st">"Tallsedge"</span>) {<span class="fu">panel.loess</span>(x,y,<span class="at">col=</span><span class="dv">1</span>,<span class="at">lwd=</span><span class="dv">2</span>)}</span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a>    })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0022278</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0022278</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0022278</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0022278</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0022278</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.0472</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0049</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0049</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0049</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0049</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.0049</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.07</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.012343</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.012343</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.012343</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.012343</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, : at
+-0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+radius 0.012343</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+all data on boundary of neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+pseudoinverse used at -0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+neighborhood radius 0.1111</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+reciprocal condition number 1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in simpleLoess(y, x, w, span, degree = degree, parametric = FALSE, :
+zero-width neighborhood. make span bigger</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Figure 10</span></span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>MyNames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"wing chord"</span>, <span class="st">"tarsus length"</span>, <span class="st">"head length"</span>,</span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">"culmen length"</span>, <span class="st">"nalospi to bill tip"</span>, <span class="st">"weightt"</span>)</span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(Sparrows[,<span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>)],</span>
+<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">lower.panel =</span> panel.cor,</span>
+<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">cex.labels=</span><span class="fl">1.3</span>,</span>
+<span id="cb139-7"><a href="#cb139-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels=</span>MyNames)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter
+
+Warning in par(usr): argument 1 does not name a graphical parameter</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="step-8-should-we-consider-interactions" class="level3">
-<h3 class="anchored" data-anchor-id="step-8-should-we-consider-interactions">Step 8: Should we consider interactions?</h3>
+<h3 class="anchored" data-anchor-id="step-8-should-we-consider-interactions"><em>Step 8: Should we consider interactions?</em></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Take the data from species 1, Sex = 0 and Wing length &gt;= 65</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a>I1 <span class="ot">&lt;-</span> Sparrows<span class="sc">$</span>SpeciesCode <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> Sparrows<span class="sc">$</span>Sex <span class="sc">!=</span> <span class="st">"0"</span> <span class="sc">&amp;</span> Sparrows<span class="sc">$</span>wingcrd <span class="sc">&lt;</span> <span class="dv">65</span></span>
+<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a>Wing1<span class="ot">&lt;-</span> Sparrows<span class="sc">$</span>wingcrd[I1]</span>
+<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>Wei1 <span class="ot">&lt;-</span> Sparrows<span class="sc">$</span>wt[I1]</span>
+<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>Mon1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(Sparrows<span class="sc">$</span>Month[I1])</span>
+<span id="cb141-6"><a href="#cb141-6" aria-hidden="true" tabindex="-1"></a>Sex1<span class="ot">&lt;-</span> <span class="fu">factor</span>(Sparrows<span class="sc">$</span>Sex[I1])</span>
+<span id="cb141-7"><a href="#cb141-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-8"><a href="#cb141-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-9"><a href="#cb141-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Define Month and Sex as categorical variables</span></span>
+<span id="cb141-10"><a href="#cb141-10" aria-hidden="true" tabindex="-1"></a>fMonth1 <span class="ot">&lt;-</span> <span class="fu">factor</span>(Mon1,<span class="at">levels=</span><span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>),</span>
+<span id="cb141-11"><a href="#cb141-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"May"</span>,<span class="st">"Jun"</span>,<span class="st">"Jul"</span>,<span class="st">"Aug"</span>,<span class="st">"Sep"</span>))</span>
+<span id="cb141-12"><a href="#cb141-12" aria-hidden="true" tabindex="-1"></a>fSex1   <span class="ot">&lt;-</span> <span class="fu">factor</span>(Sex1, <span class="at">levels=</span><span class="fu">c</span>(<span class="dv">4</span>,<span class="dv">5</span>),<span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Male"</span>,<span class="st">"Female"</span>))</span>
+<span id="cb141-13"><a href="#cb141-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-14"><a href="#cb141-14" aria-hidden="true" tabindex="-1"></a>M1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Wei1 <span class="sc">~</span> Wing1<span class="sc">*</span>fMonth1<span class="sc">*</span>fSex1)</span>
+<span id="cb141-15"><a href="#cb141-15" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(M1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Wei1 ~ Wing1 * fMonth1 * fSex1)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4629 -0.6407 -0.0633  0.5371  6.4472 
+
+Coefficients: (2 not defined because of singularities)
+                             Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)                   40.5335    16.5746   2.446   0.0147 *
+Wing1                         -0.3363     0.2817  -1.194   0.2329  
+fMonth1Jun                   -34.5083    16.7505  -2.060   0.0397 *
+fMonth1Jul                   -37.5463    16.9226  -2.219   0.0268 *
+fMonth1Aug                   -45.8166    17.8946  -2.560   0.0106 *
+fMonth1Sep                   -14.1815    40.0069  -0.354   0.7231  
+fSex1Female                  -25.9335    38.8650  -0.667   0.5048  
+Wing1:fMonth1Jun               0.5808     0.2847   2.040   0.0416 *
+Wing1:fMonth1Jul               0.6324     0.2877   2.198   0.0282 *
+Wing1:fMonth1Aug               0.7757     0.3050   2.543   0.0112 *
+Wing1:fMonth1Sep               0.1963     0.7159   0.274   0.7840  
+Wing1:fSex1Female              0.4529     0.6931   0.653   0.5136  
+fMonth1Jun:fSex1Female        23.7940    39.2265   0.607   0.5443  
+fMonth1Jul:fSex1Female        42.7893    39.3326   1.088   0.2769  
+fMonth1Aug:fSex1Female        42.3729    40.2315   1.053   0.2925  
+fMonth1Sep:fSex1Female             NA         NA      NA       NA  
+Wing1:fMonth1Jun:fSex1Female  -0.4210     0.6996  -0.602   0.5475  
+Wing1:fMonth1Jul:fSex1Female  -0.7792     0.7015  -1.111   0.2670  
+Wing1:fMonth1Aug:fSex1Female  -0.7752     0.7175  -1.080   0.2802  
+Wing1:fMonth1Sep:fSex1Female       NA         NA      NA       NA  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.097 on 887 degrees of freedom
+Multiple R-squared:  0.4038,    Adjusted R-squared:  0.3923 
+F-statistic: 35.33 on 17 and 887 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(M1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: Wei1
+                     Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+Wing1                 1  531.39  531.39 441.6123 &lt; 2.2e-16 ***
+fMonth1               4   46.50   11.63   9.6621 1.191e-07 ***
+fSex1                 1   64.08   64.08  53.2578 6.495e-13 ***
+Wing1:fMonth1         4   39.18    9.80   8.1405 1.900e-06 ***
+Wing1:fSex1           1    5.08    5.08   4.2228   0.04018 *  
+fMonth1:fSex1         3   26.96    8.99   7.4698 6.090e-05 ***
+Wing1:fMonth1:fSex1   3    9.58    3.19   2.6548   0.04741 *  
+Residuals           887 1067.31    1.20                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Make the coplot</span></span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coplot</span>(Wei1 <span class="sc">~</span> Wing1 <span class="sc">|</span> fMonth1 <span class="sc">*</span> fSex1, <span class="at">ylab =</span> <span class="st">"Weight (g)"</span>,</span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">xlab =</span> <span class="st">"Wing length (mm)"</span>,</span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">panel =</span> <span class="cf">function</span>(x, y, ...) {</span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a>         tmp <span class="ot">&lt;-</span> <span class="fu">lm</span>(y <span class="sc">~</span> x, <span class="at">na.action =</span> na.omit)</span>
+<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a>         <span class="fu">abline</span>(tmp)</span>
+<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>         <span class="fu">points</span>(x, y) })</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Define the time axis</span></span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>Time <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">25</span>)</span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>))</span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time, Waders<span class="sc">$</span>C.fuscicolis, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">"Time (2 weeks)"</span>,</span>
+<span id="cb146-6"><a href="#cb146-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"C. fuscicollis abundance"</span>)</span>
+<span id="cb146-7"><a href="#cb146-7" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(Waders<span class="sc">$</span>C.fuscicolis, <span class="at">main =</span> <span class="st">"C. fuscicollis ACF"</span>)</span>
+<span id="cb146-8"><a href="#cb146-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-9"><a href="#cb146-9" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(Time, Waders<span class="sc">$</span>L.dominicanus, <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">xlab =</span> <span class="st">"Time (2 weeks)"</span>,</span>
+<span id="cb146-10"><a href="#cb146-10" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"L. dominicanus abundance"</span>)</span>
+<span id="cb146-11"><a href="#cb146-11" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(Waders<span class="sc">$</span>L.dominicanus, <span class="at">main =</span> <span class="st">"L. dominicanus ACF"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="10stepsDataExploration_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
 </section>
 <section id="step-9-are-observations-of-the-response-variable-independent" class="level3">
-<h3 class="anchored" data-anchor-id="step-9-are-observations-of-the-response-variable-independent">Step 9: Are observations of the response variable independent?</h3>
+<h3 class="anchored" data-anchor-id="step-9-are-observations-of-the-response-variable-independent"><em>Step 9: Are observations of the response variable independent?</em></h3>
+<p>Not covered??</p>
 </section>
 <section id="step-10-apply-statistical-model" class="level3">
-<h3 class="anchored" data-anchor-id="step-10-apply-statistical-model">Step 10: Apply statistical model</h3>
-<p>See the other page on this website for an example in the case of regression analyses.</p>
+<h3 class="anchored" data-anchor-id="step-10-apply-statistical-model"><em>Step 10: Apply statistical model</em></h3>
+<p>Not covered??</p>
+<p><em>See the other page on this website for an example in the case of regression analyses.</em></p>
 
 
 </section>
@@ -316,10 +1480,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -329,8 +1492,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -343,6 +1515,125 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -386,6 +1677,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -411,6 +1703,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -471,6 +1789,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+
 
 
 

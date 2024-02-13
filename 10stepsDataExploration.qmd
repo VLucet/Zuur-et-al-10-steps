@@ -2,17 +2,17 @@
 title: "Zuur, Ieno & Elphick's 10 steps for data exploration"
 ---
 
-This page is a reproducible exploration of "[A protocol for data exploration to avoid common statistical problems](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x)" by Alain F. Zuur, Elena N. Ieno and Chris S. Elphick.
+*This page is a reproducible exploration of "[A protocol for data exploration to avoid common statistical problems](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2009.00001.x)" by Alain F. Zuur, Elena N. Ieno and Chris S. Elphick.*
 
-The 10 steps are all first presented in figure 1 of the paper:
+*The 10 steps are all first presented in figure 1 of the paper:*
 
-![The 10 steps for data exploration.](https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif){alt="The 10 steps for data exploration." fig-align="center"}
+![*The 10 steps for data exploration.*](https://besjournals.onlinelibrary.wiley.com/cms/asset/890dd91b-444e-430b-b41b-c7edee6653fb/mee3_1_f1.gif){fig-align="center"}
 
-In this paper, the authors first warn against "data dredging", which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hypotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.
+*In this paper, the authors first warn against "data dredging", which is when the patterns explored and discovered during data exploration influence data analysis unhealthily. Modeling and testing decisions should be determined a priori, using knowledge of the system and not a posteriori after exploration of the data. When understanding is limited, we can use exploration to help generate hypotheses, but that is fundamentally different from the principled workflow of this paper. Then, the authors warn against certain tests and visual tools, including normality tests.*
 
-#### Accessing data and code for reproducibility
+#### *Accessing data and code for reproducibility*
 
-Let's first load the relevant packages for this analysis.
+*Let's first load the relevant packages for this analysis.*
 
 ```{r, message=FALSE}
 # Necessary packages from original code
@@ -20,36 +20,373 @@ library(lattice)
 
 # Other additionnal packages to improve upon the provided code
 library(here)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
 ```
 
-Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step 8: Are observations of the response variable independent?). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick_2010`.
+*Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step%208:%20Are%20observations%20of%20the%20response%20variable%20independent?). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick_2010`.*
 
-Again, the authors provide custom functions that need to be sourced. Like in the 2016 paper, they suggest about that code that "It is perhaps better not to try and understand what it all does"...
+*Again, the authors provide custom functions that need to be sourced. Like in the 2016 paper, they suggest about that code that "It is perhaps better not to try and understand what it all does"...*
 
 ```{r}
 source(here("data", "zuur_ieno_elphick_2010", "HighstatLib.r"))
 ```
 
-### Step 1: Formulate hypotheses, carry out experiments and data collection
+*Let's also load the datasets while we are at it.*
 
-See the other page on this website for an example in the case of regression analyses.
+```{r}
+Sparrows <- read.table(file = here("data", "zuur_ieno_elphick_2010", "SparrowsElphick.txt"), header = TRUE)
+Godwits <- read.table(file = here("data", "zuur_ieno_elphick_2010", "Godwits.txt"), header = TRUE) 
+RiceField <- read.table(file = here("data", "zuur_ieno_elphick_2010", "ElphickBirdData.txt"), header = TRUE)
+Sparrows2 <- read.table(file = here("data", "zuur_ieno_elphick_2010", "VegSamplesV1.txt"), header = TRUE)
+Waders <- read.table(file = here("data", "zuur_ieno_elphick_2010", "wader.txt"), header = TRUE)
+```
 
-### Step 2: Are there outliers in Y and X?
+### *Step 1: Formulate hypotheses, carry out experiments and data collection*
 
-### Step 3: Do we have homogeneity of variance?
+*See the other page on this website for an example in the case of regression analyses.*
 
-### Step 4: Are the data normally distributed?
+### *Step 2: Are there outliers in Y and X?*
 
-### Step 5: Are there lots of zeros in the data?
+*It is important to know how your modeling technique of choice handles outliers in the data. The authors suggest to plot the data as a first way to look at potential outliers. They also suggest simple Cleveland dot plots.*
 
-### Step 6: Is there collinearity among the covariates?
+```{r}
+ggplot(Sparrows) + 
+  geom_boxplot(aes(y = wingcrd)) +
+  labs(y = "Wing length (mm)") +
+  theme_bw()
+```
 
-### Step 7: What are the relationships between Y and X variables?
+```{r}
+ggplot(Sparrows) + 
+  geom_point(aes(x = wingcrd, y = 1:nrow(Sparrows))) +
+  labs(x = "Wing length (mm)",
+       y = "Order of the data") +
+  theme_bw()
+```
 
-### Step 8: Should we consider interactions?
+```{r}
+names_df <- data.frame(
+  name =  c("wingcrd", "tarsus", "head", "culmen", "nalospi", "wt"),
+  titles = c("wing length", "tarsus length", "head length",
+                 "culmen length", "nalospi to bill tip", "weight")
+  )
 
-### Step 9: Are observations of the response variable independent?
+Sparrows |> 
+  pivot_longer(cols = c(wingcrd, tarsus, head, culmen, nalospi, wt)) |> 
+  left_join(names_df) |> 
+  ggplot() +
+  geom_point(aes(x = value, y = rep(1:nrow(Sparrows), each = 6))) +
+  facet_wrap(~ titles, scales = "free") +
+  labs(x = "Value of the variable",
+       y = "Order of the data") +
+  theme_bw()
+```
 
-### Step 10: Apply statistical model
+*The authors discuss the thorny topic of outlier removal and enjoin the reader to think of outlier not necessarily as points that seems out of the ordinary distribution of the data but as observations that would exert undue influence on the analysis. They also suggest using distributions better able to deal with outlier data, or more able metrics of distance for multivariate analysis.*
 
-See the other page on this website for an example in the case of regression analyses.
+### *Step 3: Do we have homogeneity of variance?*
+
+*The authors include a small section on checking equality of variance. Small deviations are okay, but larger variations can be problematic and should be addressed if possible. The authors point out to papers with more extreme examples. In the dataset plotted below, the differences in variance are negligible according to the authors.*
+
+```{r}
+Godwits |> 
+  mutate(sex = ifelse(SEX == 0, "Not",
+                      ifelse(SEX == 1, "Female", "Male"))) |> 
+  mutate(period = ifelse(PERIOD == 0, "Summer",
+                         ifelse(PERIOD == 1, "Pre-migration", "Winter"))) |> 
+  filter(sex != "Not") |>
+  ggplot() +
+  geom_boxplot(aes(y = mgconsumed, x = period)) +
+  facet_wrap(~ sex, scales = "free") +
+  labs(x = "Migration period", y = "Intake rate") +
+  theme_bw()
+```
+
+### *Step 4: Are the data normally distributed?*
+
+Different methods will make different assumptions about normality. For example in regression, the residual error is expected to be normally distributed, and in general, this assumption is more relevant for individual data point predictions than overall fit. The authors also warn against the fact that even if the data is properly distributed, others issues such as skewness can creep up, like in the figure below.
+
+```{r, message=FALSE}
+months_df <- data.frame(
+  Month = c(5, 6, 7, 8, 9, 10),
+  Monthlabel = c("May", "June", "July", "August",
+             "Sept.", "Oct.")
+)
+
+Sparrows_mod <- Sparrows |> 
+  left_join(months_df) |> 
+  filter(Month %in% 6:8)
+
+Sparrows_mod |> 
+  ggplot() +
+  geom_histogram(aes(x = wt)) +
+  labs(x = "Weight (g)", y = "Frequency") +
+  theme_bw()
+```
+
+```{r, message=FALSE, fig.height=6, fig.width=6}
+Sparrows_mod |> 
+  ggplot() +
+  geom_histogram(aes(x = wt)) +
+  labs(x = "Weight (g)", y = "Frequency") +
+  facet_grid(rows = "Monthlabel") +
+  theme_bw()
+```
+
+### *Step 5: Are there lots of zeros in the data?*
+
+The authors suggest considering the prevalence of zeroes in the dataset and what it means for the method that is best to use. In regression models, that might mean using zero inflated models and for multivariate methods it means considering what true zeroes are and think more clearly about joint absences.
+
+The plot belows shows the prevalence of zeroes in a dataset (718 of 2035 observations equal zero).
+
+```{r, message=FALSE}
+
+RiceField |> 
+  mutate(bird_var = round(AREA * AQBIRDS)) |> 
+  ggplot() +
+  geom_histogram(aes(x = bird_var)) +
+  labs(x = "Observed values", y = "Frequency") +
+  theme_bw()
+```
+
+In the same dataset, the amount of co-absences is high. The figure is difficult to update to ggplot2 so I kept it in base R. Unfortunately the code provided by the authors fail to reproduce the figure correctly.
+
+```{r}
+#Figure 8
+
+#These are all the species
+AllS <- c(
+"TUSW",     "GWFG",     "WHGO",     "CAGO",     "MALL",
+"GADW",     "GWTE",     "CITE",     "UNTE",     "AMWI",     "NOPI",
+"NOSH",     "RIDU",     "CANV",     "BUFF",     "WODU",     "RUDU",
+"EUWI",     "UNDU",     "PBGB",     "SORA",     "COOT",     "COMO",
+"AMBI",     "BCNH",     "GBHE",     "SNEG",     "GREG",     "WFIB",
+"SACR",     "AMAV",     "BNST",     "BBPL",     "KILL",     "LBCU",
+"GRYE",     "LEYE",     "LBDO",     "SNIP",     "DUNL",     "WESA",
+"LESA",     "PEEP",     "RUFF",     "UNSH",     "RBGU",     "HEGU",
+"CAGU",     "GUSP")
+
+#Determine species richness
+Richness <- colSums(RiceField[,AllS] > 0, na.rm = TRUE)
+
+#Remove all covariates
+Birds  <- RiceField[,AllS]
+
+#To reduce the of variables in the figure, we only used the
+#20 species that occured at more than 40 sites.
+#As a result, N = 20. Else it becomes a mess.
+Birds2 <- Birds[, Richness > 40]
+N <- ncol(Birds2)
+
+AllNames <- names(Birds2)
+A <- matrix(nrow = N, ncol = N)
+
+for (i in 1:N){
+  for (j in 1:N){
+    A[i,j] <- sum(RiceField[,AllS[i]]==0  & RiceField[,AllS[j]]==0, na.rm=TRUE)
+    }}
+
+A1 <- A/2035
+# print(A1, digits = 2)
+rownames(A1) <- AllNames
+colnames(A1) <- AllNames
+
+panel.corrgram.2 <- function(x, y, z, subscripts, at = pretty(z), scale = 0.8, ...)
+{
+    require("grid", quietly = TRUE)
+    x <- as.numeric(x)[subscripts]
+    y <- as.numeric(y)[subscripts]
+    z <- as.numeric(z)[subscripts]
+    zcol <- level.colors(z, at = at, ...)
+    for (i in seq(along = z))
+    {
+        lims <- range(0, z[i])
+        tval <- 2 * base::pi *
+            seq(from = lims[1], to = lims[2], by = 0.01)
+        grid.polygon(x = x[i] + .5 * scale * c(0, sin(tval)),
+                     y = y[i] + .5 * scale * c(0, cos(tval)),
+                     default.units = "native",
+                     gp = gpar(fill = zcol[i]))
+        grid.circle(x = x[i], y = y[i], r = .5 * scale,
+                    default.units = "native")
+    }
+}
+
+levelplot(A1,xlab=NULL,ylab=NULL,
+    at=do.breaks(c(0.5,1.01),101),
+    panel=panel.corrgram.2,
+    scales=list(x=list(rot=90)),
+    colorkey=list(space="top"),
+    col.regions=colorRampPalette(c("red","white","blue")))
+
+#Grey colours
+# levelplot(A1,xlab=NULL,ylab=NULL,
+#     at=do.breaks(c(0.5,1.01),101),
+#     panel=panel.corrgram.2,
+#     scales=list(x=list(rot=90)),
+#     colorkey=list(space="top"),
+#     col.regions=colorRampPalette(c(grey(0.8),grey(0.5),grey(0.2))))
+```
+
+### *Step 6: Is there collinearity among the covariates?*
+
+I've read elsewhere, namely in statistiscal rethinking and [here](file:///home/vlucet/Downloads/CollinearityIsntADiseaseThatNeedsCuring_ms.pdf), that multicolinearity is rarely dealt with in a causal thinking kind of way. Here the authors show an example of a "causal salad" of parameters, where model selection turns into dropping non colinear, then non significant variables ; this certainly supports McElreath's musings here. From what I gather, dropping colinear variables probably only makes sense if it also makes sense in the context of your causal model.
+
+To be returned to when I've understood more about all this.
+
+### *Step 7: What are the relationships between Y and X variables?*
+
+This seems like another example of histomancy (again, re: rethinking): trying to divine a modelling approach from plotting variables against each other.
+
+```{r}
+Z<-Sparrows2[,c("Avgmaxht", "Avgdens", "ht.thatch",
+                "S.patens", "Distichlis", "S.alternifloraShort",
+                "S.alternifloraTall", "Juncus", "Bare", "Other",
+                "Phragmites", "Shrub", "Tallsedge", "Water")]
+
+corvif(Z)      #Part of Table 1
+
+#Run linear regression
+M1<-lm(Banded~Avgmaxht + Avgdens + ht.thatch + S.patens +
+              Distichlis + S.alternifloraShort + S.alternifloraTall +
+              Juncus + Bare + Other + Phragmites + Shrub + Tallsedge +
+               Water, data = Sparrows2)
+summary(M1)    #Part of Table 1
+
+
+#Chop out covariates
+Z<-Sparrows2[,c("ht.thatch", "S.patens", "Distichlis",
+                "S.alternifloraShort", "Juncus", "Bare", "Other",
+                "Phragmites", "Shrub", "Tallsedge", "Water")]
+corvif(Z)      #Part of Table 1
+
+
+#Linear regression on subset
+M2 <- lm(Banded ~ ht.thatch + S.patens +
+                  Distichlis + S.alternifloraShort +
+                  Juncus + Bare + Other + Phragmites + Shrub + Tallsedge +
+                  Water, data = Sparrows2)
+summary(M2)    #Part of Table 1
+
+
+M2 <- lm(Banded ~ Juncus + Shrub, data = Sparrows2)
+drop1(M2, test = "F")
+# coeff(M1)
+step(M2)
+
+M3 <- lm(Banded ~ Juncus+Shrub, data = Sparrows2)
+summary(M3)    #Part of Table 1
+
+
+#Figure 9
+Z <- as.vector(as.matrix(Sparrows2[, c("Avgmaxht", "Avgdens",
+              "ht.thatch", "S.patens", "Distichlis",
+              "S.alternifloraShort", "S.alternifloraTall", "Juncus",
+              "Bare", "Other", "Phragmites", "Shrub", "Tallsedge", "Water")]))
+
+
+#Setup the data in vector format for the xyplot
+Y10 <- rep(Sparrows2$Banded, 14)
+
+MyNames <- names(Sparrows2[,c("Avgmaxht", "Avgdens", "ht.thatch",
+                "S.patens", "Distichlis", "S.alternifloraShort",
+                "S.alternifloraTall", "Juncus", "Bare", "Other",
+                "Phragmites", "Shrub", "Tallsedge", "Water")])
+
+ID10 <- rep(MyNames, each = length(Sparrows2$Banded))
+
+ID11 <- factor(ID10, labels = c("% Juncus gerardii",
+               "% Shrub", "Height of thatch", "% Spartina patens",
+               "% Distichlis", "% Bare ground", "% Other vegetation",
+               "% Phragmites australis", "% Tall sedge", "% Water",
+               "% Spartina alterniflora (short)",
+               "% Spartina alterniflora (tall)",
+               "Maximum vegetation height",
+               "Vegetation stem density"),
+               levels = c("Juncus", "Shrub", "Avgmaxht", "S.patens",
+                          "Distichlis", "Bare", "Other", "Phragmites",
+                          "Tallsedge", "Water", "S.alternifloraShort",
+                          "S.alternifloraTall", "ht.thatch", "Avgdens"))
+
+
+xyplot(Y10 ~ Z | ID11, col = 1,
+  strip = function(bg='white',...) strip.default(bg='white',...),
+  scales = list(alternating = T,
+                x = list(relation = "free"),
+                y = list(relation = "same")),
+  xlab = "Covariates",
+  par.strip.text = list(cex = 0.8),
+  ylab = "Banded",
+  panel=function(x, y, subscripts,...){
+    panel.grid(h =- 1, v = 2)
+    panel.points(x, y, col = 1, pch = 16)
+    if(ID10[subscripts][1] != "Tallsedge") {panel.loess(x,y,col=1,lwd=2)}
+    })
+```
+
+```{r}
+#Figure 10
+MyNames <- c("wing chord", "tarsus length", "head length",
+             "culmen length", "nalospi to bill tip", "weightt")
+pairs(Sparrows[,c(1, 3, 4, 5, 6, 7)],
+      lower.panel = panel.cor,
+      cex.labels=1.3,
+      labels=MyNames)
+```
+
+### *Step 8: Should we consider interactions?*
+
+```{r}
+
+#Take the data from species 1, Sex = 0 and Wing length >= 65
+I1 <- Sparrows$SpeciesCode == 1 & Sparrows$Sex != "0" & Sparrows$wingcrd < 65
+Wing1<- Sparrows$wingcrd[I1]
+Wei1 <- Sparrows$wt[I1]
+Mon1 <- factor(Sparrows$Month[I1])
+Sex1<- factor(Sparrows$Sex[I1])
+
+
+#Define Month and Sex as categorical variables
+fMonth1 <- factor(Mon1,levels=c(5,6,7,8,9),
+                labels=c("May","Jun","Jul","Aug","Sep"))
+fSex1   <- factor(Sex1, levels=c(4,5),labels=c("Male","Female"))
+
+M1 <- lm(Wei1 ~ Wing1*fMonth1*fSex1)
+summary(M1)
+anova(M1)
+
+#Make the coplot
+coplot(Wei1 ~ Wing1 | fMonth1 * fSex1, ylab = "Weight (g)",
+       xlab = "Wing length (mm)",
+       panel = function(x, y, ...) {
+         tmp <- lm(y ~ x, na.action = na.omit)
+         abline(tmp)
+         points(x, y) })
+
+```
+
+```{r}
+#Define the time axis
+Time <- seq(1,25)
+
+par(mfrow = c(2, 2), mar = c(5, 4, 3, 2))
+plot(Time, Waders$C.fuscicolis, type = "l", xlab = "Time (2 weeks)",
+     ylab = "C. fuscicollis abundance")
+acf(Waders$C.fuscicolis, main = "C. fuscicollis ACF")
+
+plot(Time, Waders$L.dominicanus, type = "l", xlab = "Time (2 weeks)",
+     ylab = "L. dominicanus abundance")
+acf(Waders$L.dominicanus, main = "L. dominicanus ACF")
+```
+
+### *Step 9: Are observations of the response variable independent?*
+
+Not covered??
+
+### *Step 10: Apply statistical model*
+
+Not covered??
+
+*See the other page on this website for an example in the case of regression analyses.*
