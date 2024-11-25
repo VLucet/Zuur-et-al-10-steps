@@ -25,7 +25,7 @@ library(dplyr)
 library(tidyr)
 ```
 
-*Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](Step%208:%20Are%20observations%20of%20the%20response%20variable%20independent?). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick_2010`.*
+*Unlike in the more recent 2016 paper, the data here is only accessible via a [zip archive on the paper webpage](https://besjournals.onlinelibrary.wiley.com/action/downloadSupplement?doi=10.1111%2Fj.2041-210X.2009.00001.x&file=MEE3_1_sm_Appendix_S1.zip). Download the archive to `data/archive` and extract it to `data/zuur_ieno_elphick_2010`.*
 
 *Again, the authors provide custom functions that need to be sourced. Like in the 2016 paper, they suggest about that code that "It is perhaps better not to try and understand what it all does"...*
 
